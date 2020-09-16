@@ -6,5 +6,12 @@
 </head>
 <body>
 <h1>MY DICK</h1>
+{% for advert in adverts_list %}
+<p>{{ advert.address }}</p>
+<p>{{ advert.description }}</p>
+<p>{{ advert.date_updated }}</p>
+    <hr>
+{% endfor %}
+
 </body>
 </html>
