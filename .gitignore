@@ -3,3 +3,6 @@
 /.idea
 *__pycache__/
 /db.sqlite3
+rent/static/rent/.sass-cache
+/static
+/media

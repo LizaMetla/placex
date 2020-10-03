@@ -1,0 +1,45 @@
+version: '3.5'
+
+services:
+
+  postgres:
+    image: postgres
+    restart: on-failure
+    container_name: placex_postgres
+    ports:
+      - "5432:5432"
+    networks:
+      placex:
+        ipv4_address: "172.44.0.2"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+
+  web:
+    build: .
+    depends_on:
+      - postgres
+    container_name: placex_web
+    volumes:
+      - .:/code
+    command: bash -c "python manage.py makemigrations rent &&
+              python manage.py makemigrations &&
+              python manage.py migrate &&
+              python manage.py collectstatic --noinput &&
+              python manage.py runserver 0.0.0.0:8010"
+    ports:
+      - "8010:8010"
+    tty: true
+    environment:
+      DJANGO_SETTINGS_MODULE: "placex.settings"
+    networks:
+      placex:
+        ipv4_address: "172.44.0.3"
+
+
+
+networks:
+  placex:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.44.0.0/16"
