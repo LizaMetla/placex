@@ -1,0 +1,72 @@
+{% extends 'rent/base.html' %}
+{% block context %}
+	<div class="cart-table-area section-padding-100">
+		<div class="container">
+			<h2 class="text-center" id="title">Войдите или зарегистрируйтесь</h2>
+ 			<hr>
+			<div class="row">
+                <div class="col-md-5">
+ 				 		<form role="form"  method="post">
+						<fieldset>
+							<p class="text-uppercase">Войдите, используя свой аккаунт: </p>
+
+							<div class="form-group">
+								<input type="email" name="username" id="username" class="form-control input-lg" placeholder="username">
+							</div>
+							<div class="form-group">
+								<input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password">
+							</div>
+							<div>
+								<input type="submit" class="btn btn-md" value="Вход">
+							</div>
+                        {% csrf_token %}
+ 						</fieldset>
+				</form>
+				</div>
+
+				<div class="col-md-5">
+ 					<form role="form" method="post" action="{% url 'registration' %}">
+						<fieldset>
+                            {% csrf_token %}
+							<p class="text-uppercase pull-center"> Регистрация</p>
+							<div class="form-group">
+								<input type="email" name="username" id="email" class="form-control input-lg" placeholder="Email Address">
+							</div>
+							<div class="form-group">
+								<input type="password" name="password1" id="password" class="form-control input-lg" placeholder="Password">
+							</div>
+								<div class="form-group">
+								<input type="password" name="password2" id="password2" class="form-control input-lg" placeholder="Password2">
+							</div>
+ 							<div>
+ 									  <input type="submit" class="btn btn-lg btn-primary"   value="Регистрация">
+ 							</div>
+						</fieldset>
+					</form>
+				</div>
+
+				<div class="col-md-2">
+					<!-------null------>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+
+{#<div class="single-product-area section-padding-20 clearfix mt-30 mb-100">#}
+{#            <div class="container-fluid">#}
+{#                <div class="row">#}
+{#                    <div class="col-12 col-lg-7">#}
+{#                        <form action="" method="post">#}
+{#                            {{ form.as_p }}#}
+{#                            {% csrf_token %}#}
+{#                        </form>#}
+{##}
+{#                    </div>#}
+{#                    <div class="col-12 col-lg-5">#}
+{#                        Регистрация#}
+{#                    </div></div></div></div>#}
+
+{% endblock %}
