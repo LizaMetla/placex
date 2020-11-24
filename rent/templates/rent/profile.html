@@ -1,0 +1,47 @@
+{% extends 'rent/base.html' %}
+{% block h1 %}
+    <h1 class="section-padding-20">Мои объявления: {{ request.user.username }}{% if not adverts_list %} <br><p class="section-padding-20">Вы не добавили ни одного объявления.</p>{% endif %}</h1>
+
+{% endblock %}
+{% block context %}
+
+    <div class="products-catagories-area clearfix">
+
+        <div class="amado-pro-catagory clearfix">
+            {% for advert in adverts_list %}
+                <div class="single-products-catagory clearfix">
+                    <a href="{% url 'advert-detail' advert.pk %}">
+                        <!-- Hover Content -->
+                        <img src="{{ advert.get_main_image.file.url }}" alt="{{ advert.address }}"
+                             style="width:400px;height:350px;">
+                        <div class="hover-content">
+                            <div class="line"></div>
+                            <p>From {{ advert.price }}</p>
+                            <h4>{{ advert.address }}</h4>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+
+
+        </div>
+        {% if page_obj.paginator.count %}
+            <nav aria-label="navigation">
+                <ul class="pagination justify-content-end mt-50">
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+
+                            <li class="page-item active"><a class="page-link"
+                                                            href="?page={{ page_obj.number }}">{{ page_obj.number }}.</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}.</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+    <!-- Full Page Image Background Carousel Header -->
+
+{% endblock %}

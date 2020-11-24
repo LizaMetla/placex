@@ -18,8 +18,9 @@ class CustomUserChangeForm(UserChangeForm):
         fields = ('username', 'email')
 
 class AdvertForm(ModelForm):
+    file_field = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
     class Meta:
         model = Advert
-        fields = '__all__'
+        exclude = ['owner']
 class RegistrationForm(forms.Form):
     pass

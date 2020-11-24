@@ -5,6 +5,7 @@ from rent.views import *
 
 urlpatterns = [
     path('', DefaultPageView.as_view(), name='home'),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),

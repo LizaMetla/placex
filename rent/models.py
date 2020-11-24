@@ -29,15 +29,7 @@ class Advert(models.Model):
     def get_main_image(self):
         return self.images.filter(is_main=True).first()
 
-@receiver(models.signals.post_delete, sender=Advert)
-def auto_delete_file_on_delete(sender, instance, **kwargs):
-    """
-    Deletes file from filesystem
-    when corresponding `MediaFile` object is deleted.
-    """
-    if instance.source_file:
-        if os.path.isfile(instance.file.path):
-            os.remove(instance.file.path)
+
 
 
 
@@ -49,3 +41,12 @@ class Image(models.Model):
         ordering = ['-is_main']
     def __str__(self):
         return str(self.advert)
+@receiver(models.signals.post_delete, sender=Image)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.file:
+        if os.path.isfile(instance.file.path):
+            os.remove(instance.file.path)
