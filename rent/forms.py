@@ -24,3 +24,8 @@ class AdvertForm(ModelForm):
         exclude = ['owner']
 class RegistrationForm(forms.Form):
     pass
+
+class SearchForm(forms.Form):
+    cost_min = forms.IntegerField()
+    cost_max = forms.IntegerField()
+    is_owner = forms.BooleanField()

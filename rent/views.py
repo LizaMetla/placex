@@ -1,6 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.db.models import Q
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -9,7 +10,7 @@ from django.views import View
 
 from django.views.generic import TemplateView, DetailView, ListView
 
-from rent.forms import AdvertForm, RegistrationForm, CustomUserCreationForm
+from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm
 from rent.models import Advert, Image
 
 
@@ -23,11 +24,22 @@ class DefaultPageView(ListView):
     context_object_name = 'adverts_list'
 
     def get_queryset(self):
-        return Advert.objects.all()
+        query = Q()
+        cost_min = self.request.GET.get('cost_min')
+        if cost_min and cost_min.isdigit():
+            query &= Q(price__gte=cost_min)
+        cost_max = self.request.GET.get('cost_max')
+        if cost_max and cost_max.isdigit():
+            query &= Q(price__lte=cost_max)
+        is_owner = self.request.GET.get('is_owner')
+        if is_owner and is_owner == 'on':
+            query &= Q(owner__is_owner=True)
+        return Advert.objects.filter(query)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['view_name'] = 'home'
+        context['form'] = SearchForm(self.request.POST or None)
         return context
 
 
@@ -71,6 +83,7 @@ class AddAdvertView(AbsAuthView, TemplateView):
         context = super(AddAdvertView, self).get_context_data(**kwargs)
         context['form'] = AdvertForm(self.request.POST or None, self.request.FILES)
         return context
+
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         if context['form'].is_valid():
@@ -84,8 +97,6 @@ class AddAdvertView(AbsAuthView, TemplateView):
                     image.is_main = True
                 image.save()
         return render(request, self.template_name, context)
-
-
 
 
 class RegistrationView(TemplateView):
@@ -102,7 +113,9 @@ class RegistrationView(TemplateView):
             user = context['registration_form'].save()
             login(request, user=user)
         return render(request, self.template_name, context)
-class ProfileView(ListView):
+
+
+class ProfileView(AbsAuthView, ListView):
     template_name = 'rent/profile.html'
     paginate_by = 20
     context_object_name = 'adverts_list'

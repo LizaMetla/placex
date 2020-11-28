@@ -13,7 +13,11 @@ class User(AbstractUser):
     max_price = models.FloatField(verbose_name='Максимальная цена', null=True, blank=True)
     min_price = models.FloatField(verbose_name='Минимальная цена', null=True, blank=True)
     phone_number = models.CharField(verbose_name='Телефон', max_length=13, null=True, blank=True)
+    is_owner = models.BooleanField(default=True)
 
+class AdvertManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active_admin=True)
 
 class Advert(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Владелец')
@@ -22,7 +26,8 @@ class Advert(models.Model):
     date_updated = models.DateTimeField(verbose_name='Дата обновления', auto_now=True)
     address = models.CharField(verbose_name='Адрес', max_length=200)
     price = models.FloatField(verbose_name='Цена')
-
+    is_active_admin = models.BooleanField(default=False, verbose_name='Скрыть объявление у всех в выдаче?')
+    is_active = models.BooleanField(default=False, verbose_name='Скрыть объявление?')
     def __str__(self):
         return self.address
 

@@ -1,5 +1,9 @@
 {% extends 'rent/base.html' %}
 {% block context %}
+    <form action="">
+    {{ form }}
+        <input type="submit" value="Поиск">
+    </form>
     <div class="products-catagories-area clearfix">
         <div class="amado-pro-catagory clearfix">
             {% for advert in adverts_list %}
