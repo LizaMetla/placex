@@ -85,6 +85,7 @@
                     <li {% if view_name == "login" %}class="active"{% endif %}><a href="{% url 'login' %}">Войти</a></li>
                 {% endif %}
                 <li {% if view_name == "advert_detail" %}class="active"{% endif %}><a href="advert-detail.html">Бот</a></li>
+                <li {% if view_name == "favourites" %}class="active"{% endif %}><a href="{% url 'favorites' %}">Избранное</a></li>
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="checkout.html">Checkout</a></li>
             </ul>

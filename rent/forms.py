@@ -21,7 +21,7 @@ class AdvertForm(ModelForm):
     file_field = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
     class Meta:
         model = Advert
-        exclude = ['owner']
+        exclude = ['owner','is_active_admin' ]
 class RegistrationForm(forms.Form):
     pass
 

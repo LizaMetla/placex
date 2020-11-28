@@ -14,7 +14,7 @@ class User(AbstractUser):
     min_price = models.FloatField(verbose_name='Минимальная цена', null=True, blank=True)
     phone_number = models.CharField(verbose_name='Телефон', max_length=13, null=True, blank=True)
     is_owner = models.BooleanField(default=True)
-
+    favorites = models.ManyToManyField('Advert', blank=True)
 class AdvertManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active_admin=True)
@@ -27,7 +27,8 @@ class Advert(models.Model):
     address = models.CharField(verbose_name='Адрес', max_length=200)
     price = models.FloatField(verbose_name='Цена')
     is_active_admin = models.BooleanField(default=False, verbose_name='Скрыть объявление у всех в выдаче?')
-    is_active = models.BooleanField(default=False, verbose_name='Скрыть объявление?')
+    is_active = models.BooleanField(default=False, verbose_name='Сделать видимым для всех пользователей?')
+
     def __str__(self):
         return self.address
 

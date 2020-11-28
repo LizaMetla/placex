@@ -1,98 +1,114 @@
 {% extends 'rent/base.html' %}
 {% block title %}
-Place detail
+    Place detail
 {% endblock %}
 
 {% block context %}
 
-        <!-- Product Details Area Start -->
-        <div class="single-product-area section-padding-20 clearfix">
-            <div class="container-fluid">
+    <!-- Product Details Area Start -->
+    <div class="single-product-area section-padding-20 clearfix">
+        <div class="container-fluid">
 
 
-                <div class="row">
-                    <div class="col-12 col-lg-7">
-                        <div class="single_product_thumb">
-                            <div id="product_details_slider" class="carousel slide" data-ride="carousel">
-                                <ol class="carousel-indicators">
-                                    {% for image in advert.images.all %}
-                                        {% if forloop.first %}
-                                            <li class="active" data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}" style="background-image: url({{ image.file.url }});">
-                                    </li>
-                                        {% else %}
-                                        <li data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}" style="background-image: url({{ image.file.url }});">
-                                    </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ol>
+            <div class="row">
+                <div class="col-12 col-lg-7">
+                    <div class="single_product_thumb">
+                        <div id="product_details_slider" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                {% for image in advert.images.all %}
+                                    {% if forloop.first %}
+                                        <li class="active" data-target="#product_details_slider"
+                                            data-slide-to="{{ forloop.counter0 }}"
+                                            style="background-image: url({{ image.file.url }});">
+                                        </li>
+                                    {% else %}
+                                        <li data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}"
+                                            style="background-image: url({{ image.file.url }});">
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol>
                             <div class="carousel-inner">
                                 {% for image in advert.images.all %}
                                     {% if forloop.first %}
                                         <div class="carousel-item active">
-                                        <a class="gallery_img" href="{{ image.file.url }}">
-                                            <img class="d-block w-100" src="{{ image.file.url }}" alt="Main slide">
-                                        </a>
-                                    </div>
+                                            <a class="gallery_img" href="{{ image.file.url }}">
+                                                <img class="d-block w-100" src="{{ image.file.url }}" alt="Main slide">
+                                            </a>
+                                        </div>
                                     {% else %}
-                                    <div class="carousel-item">
-                                        <a class="gallery_img" href="{{ image.file.url }}">
-                                            <img class="d-block w-100" src="{{ image.file.url }}">
-                                        </a>
-                                    </div>
+                                        <div class="carousel-item">
+                                            <a class="gallery_img" href="{{ image.file.url }}">
+                                                <img class="d-block w-100" src="{{ image.file.url }}">
+                                            </a>
+                                        </div>
                                     {% endif %}
                                 {% endfor %}
 
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5">
-                        <div class="single_product_desc">
-                            <!-- Product Meta Data -->
-                            <div class="product-meta-data">
-                                <div class="line"></div>
-                                <p class="product-price">${{ advert.price }}</p>
-                                <a href="advert-detail.html">
-                                    <h6>{{ advert.address }}</h6>
-                                </a>
-                                <!-- Ratings & Review -->
-                                <div class="ratings-review mb-15 d-flex align-items-center justify-content-between">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="review">
-                                        <a href="#">Write A Review</a>
-                                    </div>
+                </div>
+                <div class="col-12 col-lg-5">
+                    <div class="single_product_desc">
+                        <!-- Product Meta Data -->
+                        <div class="product-meta-data">
+                            <div class="line"></div>
+                            <p class="product-price">${{ advert.price }}</p>
+                            <a href="advert-detail.html">
+                                <h6>{{ advert.address }}</h6>
+                            </a>
+                            <!-- Ratings & Review -->
+                            <div class="ratings-review mb-15 d-flex align-items-center justify-content-between">
+                                <div class="ratings">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
                                 </div>
-                                <!-- Avaiable -->
-                                <p class="avaibility"><i class="fa fa-circle"></i> In Stock</p>
-                            </div>
-
-                            <div class="short_overview my-5">
-                                <p>{{ advert.description }}</p>
-                            </div>
-
-                            <!-- Add to Cart Form -->
-                            <form class="cart clearfix" method="post">
-                                <div class="cart-btn d-flex mb-50">
-                                    <p>Qty</p>
-                                    <div class="quantity">
-                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
-                                        <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">
-                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
-                                    </div>
+                                <div class="review">
+                                    <a href="#">Write A Review</a>
                                 </div>
-                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Add to cart</button>
-                            </form>
-
+                            </div>
+                            <!-- Avaiable -->
+                            <p class="avaibility"><i class="fa fa-circle"></i> In Stock</p>
                         </div>
+
+                        <div class="short_overview my-5">
+                            <p>{{ advert.description }}</p>
+                        </div>
+
+                        <!-- Add to Cart Form -->
+                        {#                            <form class="cart clearfix" method="post">#}
+                        {#                                <div class="cart-btn d-flex mb-50">#}
+                        {#                                    <p>Qty</p>#}
+                        {#                                    <div class="quantity">#}
+                        {#                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-caret-down" aria-hidden="true"></i></span>#}
+                        {#                                        <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">#}
+                        {#                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-caret-up" aria-hidden="true"></i></span>#}
+                        {#                                    </div>#}
+                        {#                                </div>#}
+
+                        {% if advert in request.user.favorites.all %}
+                            <a href="{% url 'remove-to-favorite' advert.pk %}?next={% url 'advert-detail' advert.pk %}">
+                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Удалить из
+                                    закладок
+                                </button>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'add-to-favorite' advert.pk %}?next={% url 'advert-detail' advert.pk %}">
+                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Добавить в
+                                    закладки
+                                </button>
+                            </a>
+                        {% endif %}
+                        {#                              </form>#}
+
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Product Details Area End -->
-    {% endblock %}
+    </div>
+    <!-- Product Details Area End -->
+{% endblock %}
