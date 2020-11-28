@@ -1,9 +1,15 @@
 {% extends 'rent/base.html' %}
 {% block context %}
-    <form action="">
-    {{ form }}
+    <form action="" class="filter" id="filter">
+        <label for="id_cost_min">Cost min:</label>
+        <input type="number" name="cost_min" required="" id="id_cost_min">
+        <label for="id_cost_max">Cost max:</label>
+        <input type="number" name="cost_max" required="" id="id_cost_max">
+        <label for="id_is_owner">Is owner:</label>
+        <input type="checkbox" name="is_owner" required="" id="id_is_owner">
         <input type="submit" value="Поиск">
     </form>
+        
     <div class="products-catagories-area clearfix">
         <div class="amado-pro-catagory clearfix">
             {% for advert in adverts_list %}

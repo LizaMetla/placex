@@ -119,6 +119,11 @@ class ProfileView(AbsAuthView, ListView):
     template_name = 'rent/profile.html'
     paginate_by = 20
     context_object_name = 'adverts_list'
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['view_name'] = 'profile'
+        return context
 
     def get_queryset(self):
         return Advert.objects.filter(owner=self.request.user)
