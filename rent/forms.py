@@ -26,6 +26,6 @@ class RegistrationForm(forms.Form):
     pass
 
 class SearchForm(forms.Form):
-    cost_min = forms.IntegerField()
-    cost_max = forms.IntegerField()
-    is_owner = forms.BooleanField()
+    cost_min = forms.IntegerField(required=False)
+    cost_max = forms.IntegerField(required=False)
+    is_owner = forms.BooleanField(required=False)

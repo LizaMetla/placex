@@ -28,7 +28,7 @@ class Advert(models.Model):
     price = models.FloatField(verbose_name='Цена')
     is_active_admin = models.BooleanField(default=False, verbose_name='Скрыть объявление у всех в выдаче?')
     is_active = models.BooleanField(default=False, verbose_name='Сделать видимым для всех пользователей?')
-
+    see_counter = models.IntegerField(default=0)
     def __str__(self):
         return self.address
 

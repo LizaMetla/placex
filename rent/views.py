@@ -51,6 +51,8 @@ class AdvertDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['view_name'] = 'advert_detail'
+        context['advert'].see_counter += 1
+        context['advert'].save()
         return context
 
 
