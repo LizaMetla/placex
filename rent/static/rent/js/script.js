@@ -6,29 +6,32 @@ const costValueMin = document.querySelector('#cost_min_value');
 const costValueMax = document.querySelector('#cost_max_value');
 
 // filter bitton
-filterBtn.addEventListener('click', () => {
-    if (searchForm.classList.contains('close')) {
-        searchForm.classList.remove('close');
-    } else {
-        searchForm.classList.add('close');
+if (filterBtn) {
+    filterBtn.addEventListener('click', () => {
+        if (searchForm.classList.contains('close')) {
+            searchForm.classList.remove('close');
+        } else {
+            searchForm.classList.add('close');
+        }
+    });
+
+
+    // render costs
+    function inputRange(cost, selector) {
+        selector.textContent = cost;
     }
-});
 
-// render costs
-function inputRange(cost, selector) {
-    selector.textContent = cost;
-}
+    costMin.addEventListener('input', () => {
+        inputRange(costMin.value, costValueMin);
+    });
 
-costMin.addEventListener('input', () => {
+    costMax.addEventListener('input', () => {
+        inputRange(costMax.value, costValueMax);
+    });
+
     inputRange(costMin.value, costValueMin);
-});
-
-costMax.addEventListener('input', () => {
     inputRange(costMax.value, costValueMax);
-});
-
-inputRange(costMin.value, costValueMin);
-inputRange(costMax.value, costValueMax);
+}
 
 // log-in window
 const logInBtn = document.querySelector('#log-in-btn');
@@ -36,14 +39,17 @@ const logInWindow = document.querySelector('#log-in-window');
 const formContainer = document.querySelector('.log-in-form-container');
 const closeBtn = document.querySelector('.modal__close');
 
-logInBtn.addEventListener('click', () => {
-    if (logInWindow.classList.contains('close')) {
-        logInWindow.classList.remove('close');
-    }
-    if (formContainer.classList.contains('close')) {
-        formContainer.classList.remove('close');
-    }
-});
+if (logInBtn) {
+    logInBtn.addEventListener('click', () => {
+        document.body.style.overflow = 'hidden';
+        if (logInWindow.classList.contains('close')) {
+            logInWindow.classList.remove('close');
+        }
+        if (formContainer.classList.contains('close')) {
+            formContainer.classList.remove('close');
+        }
+    });
+}
 
 function closeLogInWindow() {
     logInWindow.classList.add('close');
@@ -60,3 +66,7 @@ formContainer.addEventListener('click', (e) => {
         closeLogInWindow();
     }
 });
+
+// add photo in registration
+
+$('#add-reg-photo').click(function() {$('#add__log-in-img').trigger('click')});
