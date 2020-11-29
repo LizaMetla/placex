@@ -58,6 +58,93 @@ body {
   /* display: none; */
 }
 
+.profile-info .log-in-btn, .profile-info .user__profile {
+  position: absolute;
+  top: 10px;
+  right: 50px;
+  color: #fbb808;
+}
+
+.profile-info .log-in-btn:hover, .registration__link:hover {
+  color: #3f3d56;
+  cursor: pointer;
+}
+
+.modal__close {
+  position:absolute;
+  top:8px;
+  right:14px;
+  font-size:30px;
+  color:#000;
+  opacity:.5;
+  font-weight:700;
+  border:none;
+  background-color:transparent;
+  cursor:pointer
+}
+
+.log-in-form-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  overflow: hidden;
+  background-color: rgba(0,0,0,.5);
+}
+
+.log-in-window {
+  position: fixed;
+  top: calc(50% - 141px);
+  margin: 0 auto;
+  /* padding: 10px; */
+  right: calc(50% - 150px);
+  width: 400px;
+  z-index: 10;
+  background-color: #fff;
+  border-radius: 10px; 
+}
+
+.log-in-photo {
+  margin: 0 150px;
+}
+
+.registration__text {
+  font-size: 20px;
+  text-align: center;
+}
+
+.registration__link {
+  font-size: 20px;
+  color: #fbb808;
+}
+
+/* .registration__link:hover {
+
+} */
+
+.font-set {
+  margin: 0;
+  color: #000;
+  text-align: center;
+  font-size: 30px;
+}
+
+.padding-dist {
+  padding: 30px 40px 0 40px;
+}
+
+.padding-dist-btn {
+  padding: 30px 60px 0 60px;
+}
+
+.btn-color {
+  background-color: #fbb808;
+  width: 100%;
+}
+
 i.fa-filter {
   position: absolute;
   top: 0;
@@ -68,7 +155,7 @@ i.fa-filter {
 
 .search__wrapper {
   position: fixed;
-  top: 50px;
+  top: 65px;
   padding: 10px;
   right: 30px;
   width: 300px;
@@ -440,7 +527,7 @@ img {
 /* :: 5.0 Welcome Area CSS */
 .main-content-wrapper {
   position: relative;
-  top: 50px;
+  top: 65px;
   z-index: 1;
   -webkit-transition-duration: 500ms;
   transition-duration: 500ms;
