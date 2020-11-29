@@ -15,6 +15,7 @@ class User(AbstractUser):
     phone_number = models.CharField(verbose_name='Телефон', max_length=13, null=True, blank=True)
     is_owner = models.BooleanField(default=True)
     favorites = models.ManyToManyField('Advert', blank=True)
+    image = models.ImageField(null=True, blank=True)
 class AdvertManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active_admin=True)
