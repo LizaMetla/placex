@@ -54,6 +54,9 @@ closeBtn.addEventListener('click', () => {
     closeLogInWindow();
 });
 
-formContainer.addEventListener('click', () => {
-    closeLogInWindow();
+formContainer.addEventListener('click', (e) => {
+    console.log(e.target);
+    if (e.target === formContainer) {
+        closeLogInWindow();
+    }
 });
