@@ -237,7 +237,7 @@
                 <div class="padding-dist-btn">
                     <input type="submit" class="btn btn-md btn-color" value="Вход">
                 </div>
-                <p class="registration__text">Нет в системе? <span class="registration__link">Регистрация</span></p>
+                <p class="registration__text">Нет в системе? <span class="registration__link"><a class="registration__link" href="{% url 'login' %}">Регистрация</a> </span></p>
             {% csrf_token %}
             </fieldset>
         </form>
@@ -255,7 +255,6 @@
 <!-- Active js -->
 <script src="{% static 'rent/js/active.js' %}"></script>
 <script src="{% static 'rent/js/script.js' %}"></script>
-
 </body>
 
 </html>
