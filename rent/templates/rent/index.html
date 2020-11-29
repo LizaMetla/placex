@@ -1,6 +1,6 @@
 {% extends 'rent/base.html' %}
 {% block context %}
-        
+
     <div class="products-catagories-area clearfix">
         <div class="amado-pro-catagory clearfix">
             {% for advert in adverts_list %}
@@ -46,15 +46,26 @@
 {% endblock %}
 
 {% block search_filter %}
-<form action="" class="filter" id="filter">
-    <label for="id_cost_min">Cost min:</label>
-    <input type="range" name="cost_min" min="0" max="5000" step="1" class="range" id="id_cost_min">
-    <p id="cost_min_value"></p>
-    <label for="id_cost_max">Cost max:</label>
-    <input type="range" name="cost_max" min="0" max="5000" step="1" class="range" id="id_cost_max">
-    <p id="cost_max_value"></p>
-    <label for="id_is_owner">Is owner:</label>
-    <input type="checkbox" name="is_owner" id="id_is_owner">
-    <input type="submit" value="Поиск">
-</form>
+    <form action="" class="filter" id="filter">
+        <label for="id_cost_min">Cost min:</label>
+        <input type="range" name="cost_min" min="0" max="5000" step="1" class="range" id="id_cost_min">
+        <p id="cost_min_value"></p>
+        <label for="id_cost_max">Cost max:</label>
+        <input type="range" name="cost_max" min="0" max="5000" step="1" class="range" id="id_cost_max">
+        <p id="cost_max_value"></p>
+
+        {#        <div class="col-12">#}
+        <label for="id_is_owner">Is owner:</label>
+        <input type="checkbox" name="is_owner" id="id_is_owner" >
+        {#        </div>#}
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <input type="submit" value="Поиск" class="form-control">
+                </div>
+            </div>
+
+        </div>
+
+    </form>
 {% endblock %}
