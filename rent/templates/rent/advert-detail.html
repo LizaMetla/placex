@@ -15,6 +15,7 @@
                     <div class="single_product_thumb">
                         <div id="product_details_slider" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
+
                                 {% for image in advert.images.all %}
                                     {% if forloop.first %}
                                         <li class="active" data-target="#product_details_slider"
@@ -54,7 +55,7 @@
                         <!-- Product Meta Data -->
                         <div class="product-meta-data">
                             <div class="line"></div>
-                            <p class="product-price">${{ advert.price }}</p>
+                            <p class="product-price">${{ advert.price }} </p> <i class="fa fa-eye" aria-hidden="true"></i> {{ advert.see_counter }}
                             <a href="advert-detail.html">
                                 <h6>{{ advert.address }}</h6>
                             </a>
