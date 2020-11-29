@@ -1,14 +1,5 @@
 {% extends 'rent/base.html' %}
 {% block context %}
-    <form action="" class="filter" id="filter">
-        <label for="id_cost_min">Cost min:</label>
-        <input type="number" name="cost_min" required="" id="id_cost_min">
-        <label for="id_cost_max">Cost max:</label>
-        <input type="number" name="cost_max" required="" id="id_cost_max">
-        <label for="id_is_owner">Is owner:</label>
-        <input type="checkbox" name="is_owner" required="" id="id_is_owner">
-        <input type="submit" value="Поиск">
-    </form>
         
     <div class="products-catagories-area clearfix">
         <div class="amado-pro-catagory clearfix">
@@ -48,4 +39,22 @@
     <!-- Full Page Image Background Carousel Header -->
 
 
+{% endblock %}
+
+{% block button_filter %}
+    <button class="filter-btn"><i class="fa fa-filter" aria-hidden="true"></i></button>
+{% endblock %}
+
+{% block search_filter %}
+<form action="" class="filter" id="filter">
+    <label for="id_cost_min">Cost min:</label>
+    <input type="range" name="cost_min" min="0" max="5000" step="1" class="range" id="id_cost_min">
+    <p id="cost_min_value"></p>
+    <label for="id_cost_max">Cost max:</label>
+    <input type="range" name="cost_max" min="0" max="5000" step="1" class="range" id="id_cost_max">
+    <p id="cost_max_value"></p>
+    <label for="id_is_owner">Is owner:</label>
+    <input type="checkbox" name="is_owner" id="id_is_owner">
+    <input type="submit" value="Поиск">
+</form>
 {% endblock %}

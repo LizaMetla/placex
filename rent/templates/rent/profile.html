@@ -1,8 +1,4 @@
 {% extends 'rent/base.html' %}
-{% block h1 %}
-    <h1 class="section-padding-20">Мои объявления: {{ request.user.username }}{% if not adverts_list %} <br><p class="section-padding-20">Вы не добавили ни одного объявления.</p>{% endif %}</h1>
-
-{% endblock %}
 {% block context %}
 
     <div class="products-catagories-area clearfix">
