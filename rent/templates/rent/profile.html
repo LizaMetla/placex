@@ -1,5 +1,13 @@
 {% extends 'rent/base.html' %}
 {% block context %}
+{{ request.user.name }}
+{{ request.user.email }}
+{{ request.user.phone_number }}
+{{ request.user.is_agent }}
+{% if request.user.image %}
+    <img src="{% block profile_img %}{{ request.user.image.url }}{% endblock %}" class="add-reg-photo v-profile-photo" alt="">
+
+{% endif %}
 
     <div class="products-catagories-area clearfix">
 

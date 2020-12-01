@@ -12,8 +12,8 @@ class User(AbstractUser):
     name = models.CharField(verbose_name='ФИО', max_length=50, null=True, blank=True)
     max_price = models.FloatField(verbose_name='Максимальная цена', null=True, blank=True)
     min_price = models.FloatField(verbose_name='Минимальная цена', null=True, blank=True)
-    phone_number = models.CharField(verbose_name='Телефон', max_length=13, null=True, blank=True)
-    is_owner = models.BooleanField(default=True)
+    phone_number = models.CharField(verbose_name='Телефон', max_length=20, null=True, blank=True)
+    is_agent = models.BooleanField(default=False)
     favorites = models.ManyToManyField('Advert', blank=True)
     image = models.ImageField(null=True, blank=True)
 class AdvertManager(models.Manager):

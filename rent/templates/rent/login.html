@@ -13,14 +13,14 @@
 							{% csrf_token %}
 
 							<div class="add__profile-photo" id="add__profile-photo">
-								<input type="file" name="file_field" accept="image/*" id="add__log-in-img" style="display: none;" onchange="previewFile(this);">
+								<input type="file" name="image" accept="image/*" id="add__log-in-img" style="display: none;" onchange="previewFile(this);">
 								<img src="{% block profile_img %}{% static 'rent/img/core-img/plusman.png' %}{% endblock %}" class="add-reg-photo v-profile-photo" id="add-reg-photo" alt="">
 							</div>
 							<div class="form-group">
 								<input type="text" name="name" id="name" class="form-control input-lg" placeholder="Имя" value="{% block profile_name %}{% endblock %}" required="">
 							</div>
 							<div class="form-group">
-								<input type="tel" name="phone" id="phone" class="form-control input-lg" placeholder="Телефон" value="{% block profile_phone %}{% endblock %}" required="" pattern="\+7\-[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}">
+								<input type="tel" name="phone_number" id="phone" class="form-control input-lg" placeholder="Телефон" value="{% block profile_phone %}{% endblock %}" required="" pattern="\+7\-[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}">
 							</div>
 							<div class="form-group">
 								<input type="email" name="username" id="email" class="form-control input-lg" placeholder="E-mail" value="{% block profile_username %}{% endblock %}" required="">

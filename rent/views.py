@@ -12,7 +12,7 @@ from django.views import View
 from django.views.generic import TemplateView, DetailView, ListView
 
 from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm, CustomUserChangeForm
-from rent.models import Advert, Image
+from rent.models import Advert, Image, User
 
 
 class AbsAuthView(LoginRequiredMixin):
@@ -34,7 +34,7 @@ class DefaultPageView(ListView):
             query &= Q(price__lte=cost_max)
         is_owner = self.request.GET.get('is_owner')
         if is_owner and is_owner == 'on':
-            query &= Q(owner__is_owner=True)
+            query &= ~Q(owner__is_agent=True)
         return Advert.objects.filter(query)
 
     def get_context_data(self, *args, **kwargs):
@@ -109,7 +109,10 @@ class RegistrationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['registration_form'] = CustomUserCreationForm(self.request.POST or None, self.request.FILES)
+        request_data = self.request.POST.copy()
+        if request_data:
+            request_data['email'] = request_data.get('username')
+        context['registration_form'] = CustomUserCreationForm(request_data or None, self.request.FILES)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -161,7 +164,7 @@ class FavoritesView(AbsAuthView, ListView):
             query &= Q(price__lte=cost_max)
         is_owner = self.request.GET.get('is_owner')
         if is_owner and is_owner == 'on':
-            query &= Q(owner__is_owner=True)
+            query &= ~Q(owner__is_agent=True)
         return self.request.user.favorites.filter(query)
 
 
@@ -179,9 +182,18 @@ class ProfileView(AbsAuthView, ListView):
 class EditProfileView(AbsAuthView, TemplateView):
     template_name = 'rent/edit-profile.html'
     def post(self, request, *args, **kwargs):
-        form = CustomUserChangeForm(request.POST or None, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-        return render(request, self.template_name, {})
+        name = self.request.POST.get('name')
+        phone = self.request.POST.get('phone')
+        username = self.request.POST.get('username')
+        image = self.request.FILES.get('image')
+        if User.objects.filter(~Q(username=self.request.user.username),username=username).exists():
+            return render(request, self.template_name, context={})
+        self.request.user.name = name
+        self.request.user.username = username
+        self.request.user.email = username
+        self.request.user.phone_number = phone
+        if image:
+            self.request.user.image = image
+        self.request.user.save()
+        return redirect('profile')
 
