@@ -11,7 +11,7 @@ from django.views import View
 
 from django.views.generic import TemplateView, DetailView, ListView
 
-from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm
+from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm, CustomUserChangeForm
 from rent.models import Advert, Image
 
 
@@ -68,6 +68,8 @@ class CustomLoginView(LoginView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        register_data = self.request.POST.copy()
+        register_data.update({'email': register_data.get('username')})
         context['registration_form'] = CustomUserCreationForm(self.request.POST or None)
         context['view_name'] = 'login'
         return context
@@ -115,6 +117,7 @@ class RegistrationView(TemplateView):
         if context['registration_form'].is_valid():
             user = context['registration_form'].save()
             login(request, user=user)
+            return redirect('home')
         return render(request, self.template_name, context)
 
 
@@ -172,3 +175,13 @@ class ProfileView(AbsAuthView, ListView):
         return context
     def get_queryset(self):
         return Advert.objects.filter(owner=self.request.user)
+
+class EditProfileView(AbsAuthView, TemplateView):
+    template_name = 'rent/edit-profile.html'
+    def post(self, request, *args, **kwargs):
+        form = CustomUserChangeForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        return render(request, self.template_name, {})
+

@@ -11,6 +11,7 @@ urlpatterns = [
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('advert/add/', AddAdvertView.as_view(), name='advert_add'),
+    path('profile/edit/', EditProfileView.as_view(), name='profile_edit'),
     path('advert/<int:pk>', AdvertDetailView.as_view(), name='advert-detail'),
     path('add-to-favorite/<int:pk>/', AddToFavoriteView.as_view(), name='add-to-favorite'),
     path('remove-from-favorite/<int:pk>/', RemoveFromFavoriteView.as_view(), name='remove-to-favorite')

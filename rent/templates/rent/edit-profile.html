@@ -1,0 +1,20 @@
+{% extends 'rent/login.html' %}
+{% load static %}
+{% block profile_url %}
+{% url 'profile_edit' %}
+{% endblock %}
+{% block profile_img %}
+    {% if request.user.image %}
+        {{ request.user.image.url }}
+        {% else %}
+        {% static 'rent/img/core-img/plusman.png' %}
+    {% endif %}
+{% endblock %}
+{% block profile_username %}{{ request.user.username }}
+{% endblock %}
+{% block profile_name %}{{ request.user.name }}
+{% endblock %}
+{% block profile_password %}
+{% endblock %}
+{% block page_title %}Редактирование профиля{% endblock %}
+{% block profile_submit %}Редактировать{% endblock %}

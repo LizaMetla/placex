@@ -9,13 +9,13 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'image', 'name')
 
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'image', 'name')
 
 class AdvertForm(ModelForm):
     file_field = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
