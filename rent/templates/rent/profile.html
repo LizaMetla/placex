@@ -1,14 +1,8 @@
 {% extends 'rent/base.html' %}
+{% load static %}
 {% block context %}
-{{ request.user.name }}
-{{ request.user.email }}
-{{ request.user.phone_number }}
-{{ request.user.is_agent }}
-{% if request.user.image %}
-    <img src="{% block profile_img %}{{ request.user.image.url }}{% endblock %}" class="add-reg-photo v-profile-photo" alt="">
 
-{% endif %}
-
+    
     <div class="products-catagories-area clearfix">
 
         <div class="amado-pro-catagory clearfix">
@@ -47,5 +41,16 @@
         {% endif %}
     </div>
     <!-- Full Page Image Background Carousel Header -->
+    <div class="personal-info">
+        {% if request.user.image %}
+            <img src="{{ request.user.image.url }}" class="add-reg-photo v-profile-photo" alt="">
+        {% else %}
+            <img src="{% static 'rent/img/core-img/plusman.png' %}" class="add-reg-photo v-profile-photo" id="add-reg-photo" alt="">
+        {% endif %}
+        <p>Имя: {{ request.user.name }}</p>
+        <p>Телефон: {{ request.user.phone_number }}</p>
+        <p>E-mail: {{ request.user.email }}</p>
+        <p>Агенство недвижимости: {{ request.user.is_agent }}</p>
+    </div>
 
 {% endblock %}

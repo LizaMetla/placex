@@ -236,6 +236,11 @@ i.fa-filter {
   margin: 0 auto;
 }
 
+.personal-info {
+  position: relative;
+  left: 50%;
+}
+
 h1,
 h2,
 h3,
