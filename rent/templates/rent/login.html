@@ -17,31 +17,32 @@
 								<img src="{% block profile_img %}{% static 'rent/img/core-img/plusman.png' %}{% endblock %}" class="add-reg-photo v-profile-photo" id="add-reg-photo" alt="">
 							</div>
 							<div class="form-group">
-								<input type="text" name="name" id="name" class="form-control input-lg" placeholder="Имя" value="{% block profile_name %}{% endblock %}">
+								<input type="text" name="name" id="name" class="form-control input-lg" placeholder="Имя" value="{% block profile_name %}{% endblock %}" required="">
 							</div>
 							<div class="form-group">
-								<input type="email" name="username" id="email" class="form-control input-lg" placeholder="E-mail" value="{% block profile_username %}{% endblock %}">
+								<input type="tel" name="phone" id="phone" class="form-control input-lg" placeholder="Телефон" value="{% block profile_phone %}{% endblock %}" required="" pattern="\+7\-[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}">
+							</div>
+							<div class="form-group">
+								<input type="email" name="username" id="email" class="form-control input-lg" placeholder="E-mail" value="{% block profile_username %}{% endblock %}" required="">
 							</div>
                         {% block profile_password %}
 							<div class="form-group">
-								<input type="password" name="password1" id="password" class="form-control input-lg" placeholder="Пароль">
+								<input type="password" name="password1" id="password" class="form-control input-lg" placeholder="Пароль" required="">
 							</div>
-								<div class="form-group">
-								<input type="password" name="password2" id="password2" class="form-control input-lg" placeholder="Подтверждение пароля">
+							<div class="form-group">
+								<input type="password" name="password2" id="password2" class="form-control input-lg" placeholder="Подтверждение пароля" required="">
 							</div>
-                            {% endblock %}
+							{% endblock %}
+							<div class="is_agent">
+								<label for="is_agent">Агенство недвижимости</label>
+								<input type="checkbox" name="is_agent" id="is_agent" class="is_agent">
+							</div>
  							<div>
- 									  <input type="submit" class="btn btn-lg btn-primary btn__reg"   value="{% block profile_submit %}Регистрация{% endblock %}">
+ 								<input type="submit" class="btn btn-lg btn-primary btn__reg"   value="{% block profile_submit %}Регистрация{% endblock %}">
  							</div>
 						</fieldset>
 					</form>
 				</div>
-
-				<div class="col-md-2">
-					<!-------null------>
-				</div>
-
-
 			</div>
 		</div>
 	</div>
