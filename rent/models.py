@@ -26,7 +26,7 @@ class Advert(models.Model):
     date_created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     date_updated = models.DateTimeField(verbose_name='Дата обновления', auto_now=True)
     address = models.CharField(verbose_name='Адрес', max_length=200)
-    city = models.CharField(verbose_name='Город', max_length=200)
+    city = models.CharField(verbose_name='Город', max_length=200, null=True, blank=True)
     price = models.FloatField(verbose_name='Цена')
     is_active_admin = models.BooleanField(default=False, verbose_name='Скрыть объявление у всех в выдаче?')
     is_active = models.BooleanField(default=False, verbose_name='Сделать видимым для всех пользователей?', blank=True)
