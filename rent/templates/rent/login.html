@@ -11,10 +11,10 @@
  					<form role="form" method="post" action="{% block profile_url %}{% url 'registration' %}{% endblock %}">
 						<fieldset>
 							{% csrf_token %}
-							
+
 							<div class="add__profile-photo" id="add__profile-photo">
-								<input type="file" name="file_field" accept="image/*" id="add__log-in-img" style="display: none;">
-								<img src="{% block profile_img %}{% static 'rent/img/core-img/plusman.png' %}{% endblock %}" class="add-reg-photo" id="add-reg-photo" alt="">
+								<input type="file" name="file_field" accept="image/*" id="add__log-in-img" style="display: none;" onchange="previewFile(this);">
+								<img src="{% block profile_img %}{% static 'rent/img/core-img/plusman.png' %}{% endblock %}" class="add-reg-photo v-profile-photo" id="add-reg-photo" alt="">
 							</div>
 							<div class="form-group">
 								<input type="text" name="name" id="name" class="form-control input-lg" placeholder="Имя" value="{% block profile_name %}{% endblock %}">

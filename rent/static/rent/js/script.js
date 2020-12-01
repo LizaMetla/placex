@@ -70,3 +70,18 @@ formContainer.addEventListener('click', (e) => {
 // add photo in registration
 
 $('#add-reg-photo').click(function() {$('#add__log-in-img').trigger('click')});
+
+function previewFile(input){
+    var file = $("input[id='add__log-in-img']").get(0).files[0];
+
+    if(file){
+        var reader = new FileReader();
+
+        reader.onload = function(){
+            $("#add-reg-photo").attr("src", reader.result);
+            console.log(reader.result);
+        }
+
+        reader.readAsDataURL(file);
+    }
+}
