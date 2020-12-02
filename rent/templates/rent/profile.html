@@ -2,12 +2,25 @@
 {% load static %}
 {% block context %}
 
+
+    <div class="personal-info">
+        {% if request.user.image %}
+            <img src="{{ request.user.image.url }}" class="add-reg-photo v-profile-photo" alt="">
+        {% else %}
+            <img src="{% static 'rent/img/core-img/plusman.png' %}" class="add-reg-photo v-profile-photo" id="add-reg-photo" alt="">
+        {% endif %}
+        <p>Имя: {{ request.user.name }}</p>
+        <p>Телефон: {{ request.user.phone_number }}</p>
+        <p>E-mail: {{ request.user.email }}</p>
+        <p>Агенство недвижимости: {{ request.user.is_agent }}</p>
+        <a href="{% url 'profile_edit'%}" style="margin-bottom: 16px;"><button class="edit__profile" style="background-color: #fbb808;"> Редактировать </button></a>
+    </div>
     
-    <div class="products-catagories-area clearfix">
+    <div class="products-catagories-area clearfix profile__announcments">
 
         <div class="amado-pro-catagory clearfix">
             {% for advert in adverts_list %}
-                <div class="single-products-catagory clearfix">
+                <div class="single-products-catagory clearfix profile-announce">
                     <a href="{% url 'advert-detail' advert.pk %}">
                         <!-- Hover Content -->
                         <img src="{{ advert.get_main_image.file.url }}" alt="{{ advert.address }}"
@@ -41,16 +54,5 @@
         {% endif %}
     </div>
     <!-- Full Page Image Background Carousel Header -->
-    <div class="personal-info">
-        {% if request.user.image %}
-            <img src="{{ request.user.image.url }}" class="add-reg-photo v-profile-photo" alt="">
-        {% else %}
-            <img src="{% static 'rent/img/core-img/plusman.png' %}" class="add-reg-photo v-profile-photo" id="add-reg-photo" alt="">
-        {% endif %}
-        <p>Имя: {{ request.user.name }}</p>
-        <p>Телефон: {{ request.user.phone_number }}</p>
-        <p>E-mail: {{ request.user.email }}</p>
-        <p>Агенство недвижимости: {{ request.user.is_agent }}</p>
-    </div>
 
 {% endblock %}
