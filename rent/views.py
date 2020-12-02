@@ -21,7 +21,7 @@ class AbsAuthView(LoginRequiredMixin):
 
 class DefaultPageView(ListView):
     template_name = 'rent/index.html'
-    paginate_by = 20
+    paginate_by = 3
     context_object_name = 'adverts_list'
 
     def get_queryset(self):
