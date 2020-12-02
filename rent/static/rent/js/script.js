@@ -61,7 +61,6 @@ closeBtn.addEventListener('click', () => {
 });
 
 formContainer.addEventListener('click', (e) => {
-    console.log(e.target);
     if (e.target === formContainer) {
         closeLogInWindow();
     }
@@ -83,5 +82,21 @@ function previewFile(input){
         }
 
         reader.readAsDataURL(file);
+    }
+}
+
+// open modal window if user not autorised (add announcement)
+const logInForm = document.querySelector('#log-in-form');
+
+function autorisationInAddingAnnounce(autorisation, url) {
+    console.log(url);
+    if (!autorisation) {
+        console.log(logInForm.action);
+        logInForm.action = `${logInForm.action}?next=${url}`;
+        console.log(logInForm.action);
+        formContainer.classList.remove('close');
+        logInWindow.classList.remove('close');
+    } else {
+        location.assign(url);
     }
 }
