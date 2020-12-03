@@ -20,7 +20,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('rent.urls'))
+    path('', include('rent.urls')),
+path('bot-polling/', include('django_telegrambot.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,0 +1,37 @@
+# Create your tasks here
+from __future__ import absolute_import, unicode_literals
+
+import os
+
+import requests
+from celery.schedules import crontab
+from celery.task import periodic_task
+from django_telegrambot.apps import DjangoTelegramBot
+
+from rent.models import Advert, Settings
+from rent.models import User
+from placex.utils import site_parser
+
+
+@periodic_task(run_every=(crontab(minute='*/30')), name='update_rooms')
+def update_rooms():
+    setting = Settings.objects.all().first()
+    if setting is None:
+        setting = Settings.objects.create()
+    print('pre_sent')
+    if setting.is_sent:
+        print('is_sent')
+        for user in User.objects.filter(chat_id__isnull=False, is_send=True, email__isnull=False):
+            print('user found')
+            if user.is_send and user.email:
+                print('bot access ')
+                bot = DjangoTelegramBot.get_bot()
+                site_parser(bot, user.chat_id)
+
+
+@periodic_task(run_every=(crontab(minute='*/59')), name='delete_rooms')
+def delete_old_rooms():
+    for room in Advert.objects.filter(link__isnull=False):
+        response = requests.get(room.link)
+        if response.status_code == 404:
+            room.delete()

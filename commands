@@ -1,0 +1,4 @@
+python manage.py crontab add
+python manage.py botpolling --username=PlaceX_bot
+python manage.py crontab show
+python manage.py crontab remove

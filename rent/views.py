@@ -101,6 +101,7 @@ class AddAdvertView(AbsAuthView, TemplateView):
                 if i == 0:
                     image.is_main = True
                 image.save()
+            return redirect('advert-detail', advert.pk)
         return render(request, self.template_name, context)
 
 

@@ -10,12 +10,17 @@ from django.dispatch import receiver
 
 class User(AbstractUser):
     name = models.CharField(verbose_name='ФИО', max_length=50, null=True, blank=True)
-    max_price = models.FloatField(verbose_name='Максимальная цена', null=True, blank=True)
-    min_price = models.FloatField(verbose_name='Минимальная цена', null=True, blank=True)
+    price_max = models.FloatField(verbose_name='Максимальная цена', null=True, blank=True)
+    price_min = models.FloatField(verbose_name='Минимальная цена', null=True, blank=True)
     phone_number = models.CharField(verbose_name='Телефон', max_length=20, null=True, blank=True)
     is_agent = models.BooleanField(default=False)
     favorites = models.ManyToManyField('Advert', blank=True)
     image = models.ImageField(null=True, blank=True)
+    is_send = models.BooleanField(default=True, blank=True)
+    is_kufar = models.BooleanField(default=False, blank=True)
+    is_onliner = models.BooleanField(default=True, blank=True)
+    is_hata = models.BooleanField(default=False, blank=True)
+    chat_id = models.CharField(max_length=50, blank=True, null=True)
 class AdvertManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active_admin=True)
@@ -32,6 +37,7 @@ class Advert(models.Model):
     is_active = models.BooleanField(default=False, verbose_name='Сделать видимым для всех пользователей?', blank=True)
     see_counter = models.IntegerField(default=0, blank=True)
     count_room = models.IntegerField(default=1)
+    link = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.address
 
@@ -39,12 +45,13 @@ class Advert(models.Model):
         return self.images.filter(is_main=True).first()
 
 
-
+class Settings(models.Model):
+    is_sent = models.BooleanField(default=True)
 
 
 class Image(models.Model):
-    file = models.ImageField(verbose_name='Изображения')
-    advert = models.ForeignKey(Advert, on_delete=models.CASCADE, related_name="images")
+    file = models.ImageField(verbose_name='Изображения', null=True)
+    advert = models.ForeignKey(Advert, on_delete=models.CASCADE, related_name="images", null=True)
     is_main = models.BooleanField(default=False)
     class Meta:
         ordering = ['-is_main']

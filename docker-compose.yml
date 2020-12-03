@@ -16,14 +16,15 @@ services:
 
   web:
     build: .
+    image: &img web
     depends_on:
       - postgres
     container_name: placex_web
     volumes:
       - .:/code
-    command: bash -c "python manage.py makemigrations rent &&
-              python manage.py makemigrations &&
-              python manage.py migrate &&
+    command: bash -c "python manage.py makemigrations rent --noinput &&
+              python manage.py makemigrations --noinput &&
+              python manage.py migrate --noinput &&
               python manage.py collectstatic --noinput &&
               python manage.py runserver 0.0.0.0:8010"
     ports:
@@ -31,10 +32,50 @@ services:
     tty: true
     environment:
       DJANGO_SETTINGS_MODULE: "placex.settings"
+      IS_PRODUCTION: "false"
     networks:
       placex:
         ipv4_address: "172.44.0.3"
 
+  django_bot:
+    build: .
+    image: *img
+    command: python manage.py botpolling --username=PlaceX_bot
+    restart: always
+    volumes:
+      - .:/code
+    depends_on:
+      - web
+    networks:
+      placex:
+        ipv4_address: "172.44.0.4"
+
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+    hostname: redis
+    networks:
+      placex:
+        ipv4_address: "172.44.0.5"
+    depends_on:
+      - web
+    volumes:
+      - redis-data:/data
+
+  celery_beat:
+    build: .
+    command: bash -c "rm -rf /opt/celeryd.pid && celery worker --pidfile=/opt/celeryd.pid -A placex -B -l INFO"
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    networks:
+      placex:
+        ipv4_address: "172.44.0.6"
+
+volumes:
+  redis-data:
 
 
 networks:
