@@ -16,6 +16,11 @@
         <a href="{% url 'profile_edit'%}" style="margin-bottom: 16px;"><button class="edit__profile" style="background-color: #fbb808;"> Редактировать </button></a>
     </div>
     
+    <div class="my-announce">
+        <h2 class="text-center center__elem-announce" id="announce-title">Мои объявления</h2>
+        <hr class="center__elem-announce">
+    </div>
+    
     <div class="products-catagories-area clearfix profile__announcments">
 
         <div class="amado-pro-catagory clearfix">
@@ -37,7 +42,7 @@
 
         </div>
         {% if page_obj.paginator.count %}
-            <nav aria-label="navigation">
+            <nav aria-label="navigation" class="page-number">
                 <ul class="pagination justify-content-end mt-50">
                     {% for i in page_obj.paginator.page_range %}
                         {% if page_obj.number == i %}

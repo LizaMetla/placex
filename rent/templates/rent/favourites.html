@@ -19,7 +19,7 @@
 
         </div>
         {% if page_obj.paginator.count %}
-            <nav aria-label="navigation">
+            <nav aria-label="navigation" class="page-number">
                 <ul class="pagination justify-content-end mt-50">
                     {% for i in page_obj.paginator.page_range %}
                         {% if page_obj.number == i %}

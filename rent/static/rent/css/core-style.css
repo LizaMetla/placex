@@ -118,6 +118,14 @@ body {
   border-radius: 10px; 
 }
 
+.validation-error {
+  position: relative;
+  left: calc(100% - 80%);
+  margin: 0;
+  width: 62%;
+  color: #ff0000;
+}
+
 .add-reg-photo {
   margin: 20px 170px;
   width: 100px;
@@ -254,7 +262,19 @@ i.fa-filter {
 .profile__announcments {
     position: absolute;
     left: 20%;
-    top: 100%;
+    top: 135%;
+}
+
+.page-number {
+  width: 20%;
+  margin: 0 auto;
+}
+
+.my-announce {
+  position: relative;
+  top: 425px;
+  left: -220px;
+  width: 759px;
 }
 
 h1,
