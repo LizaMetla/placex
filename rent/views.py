@@ -21,7 +21,7 @@ class AbsAuthView(LoginRequiredMixin):
 
 class DefaultPageView(ListView):
     template_name = 'rent/index.html'
-    paginate_by = 20
+    paginate_by = 21
     context_object_name = 'adverts_list'
 
     def get_queryset(self):
@@ -149,7 +149,7 @@ class RemoveFromFavoriteView(AbsAuthView, View):
 
 class FavoritesView(AbsAuthView, ListView):
     template_name = 'rent/favourites.html'
-    paginate_by = 20
+    paginate_by = 21
     context_object_name = 'adverts_list'
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -171,7 +171,7 @@ class FavoritesView(AbsAuthView, ListView):
 
 class ProfileView(AbsAuthView, ListView):
     template_name = 'rent/profile.html'
-    paginate_by = 20
+    paginate_by = 3
     context_object_name = 'adverts_list'
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

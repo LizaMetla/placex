@@ -65,16 +65,16 @@
 <div class="main-content-wrapper d-flex clearfix">
 
     <!-- Mobile Nav (max width 767px)-->
-    <div class="mobile-nav">
+    <!-- <div class="mobile-nav"> -->
         <!-- Navbar Brand -->
-        <div class="amado-navbar-brand">
+        <!-- <div class="amado-navbar-brand">
             <a href="index.html"><img src="{% static 'rent/img/core-img/logo.png' %}" alt=""></a>
-        </div>
+        </div> -->
         <!-- Navbar Toggler -->
-        <div class="amado-navbar-toggler">
+        <!-- <div class="amado-navbar-toggler">
             <span></span><span></span><span></span>
-        </div>
-    </div>
+        </div> -->
+    <!-- </div> -->
 
     <!-- Header Area Start -->
     <header class="header-area clearfix">
@@ -88,26 +88,26 @@
                 <li {% if view_name == "home" %}class="active"{% endif %} ><a href="{% url 'home' %}">Аренда</a></li>
                 <li {% if view_name == "advert_detail" %}class="active"{% endif %}><a href="advert-detail.html">Бот</a></li>
                 <li {% if view_name == "favourites" %}class="active"{% endif %}><a href="{% url 'favorites' %}">Избранное</a></li>
-                <li><a href="cart.html">Cart</a></li>
-                <li><a href="checkout.html">Checkout</a></li>
+                <!-- <li><a href="cart.html">Cart</a></li>
+                <li><a href="checkout.html">Checkout</a></li> -->
             </ul>
         </nav>
         <!-- Button Group -->
         <div class="amado-btn-group mt-30 mb-100">
-            <a href="{% url 'advert_add' %}" class="btn amado-btn mb-15"><i class="fa fa-plus" aria-hidden="true"></i> Объявление</a>
-            <a href="#" class="btn amado-btn active">New this week</a>
+            <a href="#" class="btn amado-btn mb-15" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true{% else %}false{% endif %}, '{% url 'advert_add' %}')"><i class="fa fa-plus" aria-hidden="true"></i> Объявление</a>
+            <!-- <a href="#" class="btn amado-btn active">New this week</a> -->
         </div>
         <!-- Cart Menu -->
         <!-- <div class="cart-fav-search mb-100">
             <a href="#" class="search-nav"><img src="{% static 'rent/img/core-img/search.png' %}" alt=""> Search</a>
         </div> -->
         <!-- Social Button -->
-        <div class="social-info d-flex justify-content-between">
+        <!-- <div class="social-info d-flex justify-content-between">
             <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
             <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
             <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
             <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-        </div>
+        </div> -->
     </header>
     <!-- Header Area End -->
 
@@ -221,7 +221,7 @@
 
 <div class="log-in-form-container close">
     <div class="log-in-window close" id="log-in-window">
-        <form role="form" method="post" action="{% url 'login'%}">
+        <form role="form" method="post" action="{% url 'login'%}" id='log-in-form'>
             <fieldset>
                 <div data-close class="modal__close">&times;</div>
                 <p class="text-uppercase font-set">Вход: </p>
@@ -229,11 +229,11 @@
                 <div class="form-group padding-dist">
                     <input type="email" name="username" id="username" class="form-control input-lg" placeholder="username">
                 </div>
-                <div class="form-group padding-dist">
+                <div class="form-group padding-dist" id='log-in-password'>
                     <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password">
                 </div>
                 <div class="padding-dist-btn">
-                    <input type="submit" class="btn btn-md btn-color" value="Вход">
+                    <input type="submit" id="log-in-enter-btn" class="btn btn-md btn-color" value="Вход">
                 </div>
                 <p class="registration__text">Нет в системе? <span class="registration__link"><a class="registration__link" href="{% url 'login' %}">Регистрация</a> </span></p>
             {% csrf_token %}

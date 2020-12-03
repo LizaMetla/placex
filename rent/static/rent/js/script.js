@@ -61,8 +61,13 @@ closeBtn.addEventListener('click', () => {
 });
 
 formContainer.addEventListener('click', (e) => {
-    console.log(e.target);
     if (e.target === formContainer) {
+        closeLogInWindow();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape') {
         closeLogInWindow();
     }
 });
@@ -84,4 +89,68 @@ function previewFile(input){
 
         reader.readAsDataURL(file);
     }
+}
+
+// open modal window if user not autorised (add announcement)
+const logInForm = document.querySelector('#log-in-form');
+
+function autorisationInAddingAnnounce(autorisation, url) {
+    console.log(url);
+    if (!autorisation) {
+        console.log(logInForm.action);
+        logInForm.action = `${logInForm.action}?next=${url}`;
+        console.log(logInForm.action);
+        formContainer.classList.remove('close');
+        logInWindow.classList.remove('close');
+    } else {
+        location.assign(url);
+    }
+}
+
+// error in validation
+
+function logInValidation(err) {
+    if (err !== '') {
+        const p = document.createElement('p');
+        p.textContent = 'Логин или пароль введены неверно!';
+        p.setAttribute('class', 'validation-error')
+        document.querySelector('#log-in-password').after(p);
+    }
+}
+
+logInValidation('');
+
+// mask for phone
+var phone = document.querySelector('#phone');
+
+phone.onclick = function() {
+    phone.value = "+375";
+}
+
+var old = 0;
+
+phone.onkeydown = function() {
+    var curLen = phone.value.length;
+    
+    if (curLen < old){
+      old--;
+      return;
+    }
+    
+    if (curLen == 4) 
+    	phone.value = phone.value + " (";
+      
+    if (curLen == 8)
+    	phone.value = phone.value + ") ";
+      
+     if (curLen == 13)
+    	phone.value = phone.value + "-"; 
+      
+     if (curLen == 16)
+    	phone.value = phone.value + "-";  
+      
+     if (curLen > 18)
+    	phone.value = phone.value.substring(0, phone.value.length - 1);
+      
+     old++;
 }
