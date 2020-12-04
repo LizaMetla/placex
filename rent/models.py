@@ -40,7 +40,8 @@ class Advert(models.Model):
     link = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.address
-
+    class Meta:
+        ordering = ['-date_created']
     def get_main_image(self):
         image = self.images.filter(is_main=True).first()
         if not image:
