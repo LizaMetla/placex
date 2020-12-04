@@ -56,9 +56,13 @@
                         <div class="product-meta-data">
                             <div class="line"></div>
                             <p class="product-price">${{ advert.price }} </p> <i class="fa fa-eye" aria-hidden="true"></i> {{ advert.see_counter }}
-                            <a href="advert-detail.html">
-                                <h6>{{ advert.address }}</h6>
-                            </a>
+
+                                <h3>{{ advert.address }}</h3>
+                                {% if advert.link %}
+                                <h6><a href="{{ advert.link }}">Оригинал</a> </h6>
+                                {% endif %}
+
+
                             
                         </div>
 
