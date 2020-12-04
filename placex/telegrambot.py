@@ -6,7 +6,7 @@ from telegram.ext import CommandHandler, MessageHandler, Filters
 
 from rent.models import User
 from placex.settings_common import PARSERS, ADMIN_EMAILS
-from placex.utils import site_parser
+
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +55,7 @@ def echo(bot, context):
         try:
             validate_email(bot.message.text)
             user.email = bot.message.text
+            user.username = bot.message.text
             user.save()
             # if user.email in ADMIN_EMAILS:
             user.is_onliner = True

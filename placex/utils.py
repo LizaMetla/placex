@@ -28,11 +28,10 @@ def set_keys_on_user(user, search_values):
     user.save()
 
 
-def get_rooms_for_user(user):
+def get_rooms_for_user():
     rooms = []
     for key, parser_func in PARSERS.items():
-        if hasattr(user, key) and getattr(user, key):
-            rooms.extend(parser_func(user))
+        rooms.extend(parser_func())
     return rooms
 
 
@@ -60,7 +59,7 @@ def getFilename_fromCd(cd):
     if len(fname) == 0:
         return 'file.png'
     return fname[0]
-def site_parser(bot, chat_id, message=''):
+def site_parser(bot, chat_id, message='', rooms=[]):
     if not User.objects.filter(chat_id=chat_id):
         print('bot not found')
         bot.sendMessage(chat_id=chat_id, text=message)
@@ -68,15 +67,10 @@ def site_parser(bot, chat_id, message=''):
         search_values = get_keys_from_message(message, SEARCH_KEYS)
         user = User.objects.get(chat_id=chat_id)
         set_keys_on_user(user, search_values)
-        try:
-            rooms = get_rooms_for_user(user)
-        except:
-            print(f'error while parsing {traceback.format_exc()}')
-            rooms = []
         for room in rooms:
             room_link = room.get('link')
-
-            if not Advert.objects.filter(owner=user, link=room_link):
+            print(room)
+            if not Advert.objects.filter(link=room_link):
                 image = room.pop('image')
                 image_obj = None
                 if image:
@@ -84,17 +78,17 @@ def site_parser(bot, chat_id, message=''):
                     if response.status_code == 200:
                         file = response.content
                         filename = uuid4().hex + '.jpeg'
-                        image_obj = Image.objects.create()
+                        image_obj = Image.objects.create(is_main=True)
                         image_obj.file.save(filename, BytesIO(file))
                         image_obj.save()
-                room = Advert.objects.create(**room)
-                room.link = room_link
-                room.save()
+                advert = Advert.objects.create(**room)
+                advert.link = room_link
+                advert.save()
                 if image_obj:
-                    image_obj.advert = room
+                    image_obj.advert = advert
                     image_obj.save()
-                room.user = user
-                room.save()
-                message_ = f'{room.link} \n {room.price} \n Адрес: {room.address or "Не указан"}'
-                bot.sendPhoto(chat_id, photo=room.images.all().first().file)
-                bot.sendMessage(chat_id, text=message_)
+                advert.save()
+                message_ = f'{advert.link} \n {advert.price} \n Адрес: {advert.address or "Не указан"}'
+                if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
+                    bot.sendPhoto(chat_id, photo=advert.images.all().first().file)
+                    bot.sendMessage(chat_id, text=message_)
