@@ -95,11 +95,8 @@ function previewFile(input){
 const logInForm = document.querySelector('#log-in-form');
 
 function autorisationInAddingAnnounce(autorisation, url) {
-    console.log(url);
     if (!autorisation) {
-        console.log(logInForm.action);
         logInForm.action = `${logInForm.action}?next=${url}`;
-        console.log(logInForm.action);
         formContainer.classList.remove('close');
         logInWindow.classList.remove('close');
     } else {
@@ -122,47 +119,11 @@ function logInValidation() {
         $("#log-in-btn").click();
     }
 }
-
 logInValidation();
-
-// mask for phone
-// var phone = document.querySelector('#phone');
-
-// phone.onclick = function() {
-//     phone.value = "+375";
-// }
-
-// var old = 0;
-
-// phone.onkeydown = function() {
-//     var curLen = phone.value.length;
-    
-//     if (curLen < old){
-//       old--;
-//       return;
-//     }
-    
-//     if (curLen == 4) 
-//     	phone.value = phone.value + " (";
-      
-//     if (curLen == 8)
-//     	phone.value = phone.value + ") ";
-      
-//      if (curLen == 13)
-//     	phone.value = phone.value + "-"; 
-      
-//      if (curLen == 16)
-//     	phone.value = phone.value + "-";  
-      
-//      if (curLen > 18)
-//     	phone.value = phone.value.substring(0, phone.value.length - 1);
-      
-//      old++;
-// }
-
 // slider
-function sliderFunc() {
-    const sliderImg = document.querySelector('img.mfp-img').parentElement;
+function sliderFunc(arrImages) {
+    const imageinSlider = document.querySelector('img.mfp-img');
+    const sliderImg = imageinSlider.parentElement;
     
     const divPrev = document.createElement('div');
     divPrev.setAttribute('class', 'prevSlider');
@@ -191,4 +152,44 @@ function sliderFunc() {
     }
     addActions(divPrev);
     addActions(divNext);
+    console.log(arrImages);
+    function sliderWork(images) {
+        const prev = document.querySelector('.prevSlider');
+        const next = document.querySelector('.nextSlider');
+
+        let sliderIndex = 1;
+
+        for (let i = 0; i < images.length; i++) {
+            if (imageinSlider.src.slice(21) === images[i]) {
+                sliderIndex = i + 1;
+            }
+        }
+
+        function showSlides(n) {
+            if (n > images.length) {
+                sliderIndex = 1;
+            }
+
+            if (n < 1) {
+                sliderIndex = image.length;
+            }
+
+            // console.log(`${imageinSlider.src.slice(0, 21)}${images[sliderIndex - 1]}`)
+            imageinSlider.src = `${imageinSlider.src.slice(0, 21)}${images[sliderIndex - 1]}`;
+
+            function plusSlides(n) {
+                showSlides(sliderIndex += n);
+            }
+
+            prev.addEventListener('click', () => {
+                plusSlides(-1);
+            });
+
+            next.addEventListener('click', () => {
+                plusSlides(1);
+            });
+        }
+        showSlides();
+    }
+    sliderWork(arrImages);
 }
