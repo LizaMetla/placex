@@ -1,3 +1,5 @@
+import urllib
+
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
@@ -41,6 +43,9 @@ class DefaultPageView(ListView):
         context = super().get_context_data(*args, **kwargs)
         context['view_name'] = 'home'
         context['form'] = SearchForm(self.request.POST or None)
+        querystring = self.request.GET.copy()
+        querystring.pop('page', None)
+        context['querystring'] = urllib.parse.urlencode(querystring)
         return context
 
 
@@ -94,6 +99,7 @@ class AddAdvertView(AbsAuthView, TemplateView):
         if context['form'].is_valid():
             advert = context['form'].save()
             advert.owner = request.user
+            advert.is_agent = request.user.is_agent
             advert.save()
             files = request.FILES.getlist('file_field')
             for i, file in enumerate(files):
@@ -154,6 +160,7 @@ class FavoritesView(AbsAuthView, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['view_name'] = 'favourites'
+
         return context
     def get_queryset(self):
         query = Q()
@@ -165,7 +172,7 @@ class FavoritesView(AbsAuthView, ListView):
             query &= Q(price__lte=cost_max)
         is_owner = self.request.GET.get('is_owner')
         if is_owner and is_owner == 'on':
-            query &= ~Q(owner__is_agent=True)
+            query &= ~Q(owner__is_agent=True) | ~Q(is_agent=True)
         return self.request.user.favorites.filter(query)
 
 

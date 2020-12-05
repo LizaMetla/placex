@@ -26,10 +26,10 @@
                         {% if page_obj.number == i %}
 
                             <li class="page-item active"><a class="page-link"
-                                                            href="?page={{ page_obj.number }}">{{ page_obj.number }}.</a>
+                                                            href="?page={{ page_obj.number }}&{{ querystring }}">{{ page_obj.number }}.</a>
                             </li>
                         {% else %}
-                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}.</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}&{{ querystring }}">{{ i }}.</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>

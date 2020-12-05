@@ -100,12 +100,17 @@ def get_all_hata_rooms() -> list:
             price = float(prices[0])
         else:
             price = 10.0
+        try:
+            count_room = int(re.search(r'\d+-комнатная', item.text).group(0).split('-')[0].strip())
+        except:
+            count_room = 1
         rooms_list.append({'image': img_link,
                            'link': link,
                            'address': " ".join(address.split()),
                            'price': price,
                            'images': images,
                            'is_agent': False,
-                           'description': description})
+                           'description': description,
+                           'count_room': count_room})
 
     return rooms_list
