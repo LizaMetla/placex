@@ -121,36 +121,69 @@ function logInValidation(err) {
 logInValidation('');
 
 // mask for phone
-var phone = document.querySelector('#phone');
+// var phone = document.querySelector('#phone');
 
-phone.onclick = function() {
-    phone.value = "+375";
-}
+// phone.onclick = function() {
+//     phone.value = "+375";
+// }
 
-var old = 0;
+// var old = 0;
 
-phone.onkeydown = function() {
-    var curLen = phone.value.length;
+// phone.onkeydown = function() {
+//     var curLen = phone.value.length;
     
-    if (curLen < old){
-      old--;
-      return;
+//     if (curLen < old){
+//       old--;
+//       return;
+//     }
+    
+//     if (curLen == 4) 
+//     	phone.value = phone.value + " (";
+      
+//     if (curLen == 8)
+//     	phone.value = phone.value + ") ";
+      
+//      if (curLen == 13)
+//     	phone.value = phone.value + "-"; 
+      
+//      if (curLen == 16)
+//     	phone.value = phone.value + "-";  
+      
+//      if (curLen > 18)
+//     	phone.value = phone.value.substring(0, phone.value.length - 1);
+      
+//      old++;
+// }
+
+// slider
+function sliderFunc() {
+    const sliderImg = document.querySelector('img.mfp-img').parentElement;
+    
+    const divPrev = document.createElement('div');
+    divPrev.setAttribute('class', 'prevSlider');
+    sliderImg.before(divPrev);   
+    
+    const divNext = document.createElement('div');
+    divNext.setAttribute('class', 'nextSlider');
+    sliderImg.after(divNext);
+
+    const prevArrow = document.createElement('i');
+    const nextArrow = document.createElement('i');
+    function addArrowIcon(selector, element, className) {
+        element.setAttribute('class', `fa ${className} fa-5x`);
+        selector.append(element);
     }
+    addArrowIcon(divPrev, prevArrow, 'fa-arrow-left');
+    addArrowIcon(divNext, nextArrow, 'fa-arrow-right');
     
-    if (curLen == 4) 
-    	phone.value = phone.value + " (";
-      
-    if (curLen == 8)
-    	phone.value = phone.value + ") ";
-      
-     if (curLen == 13)
-    	phone.value = phone.value + "-"; 
-      
-     if (curLen == 16)
-    	phone.value = phone.value + "-";  
-      
-     if (curLen > 18)
-    	phone.value = phone.value.substring(0, phone.value.length - 1);
-      
-     old++;
+    function addActions(element) {
+        element.addEventListener('mouseenter', () => {
+            element.style.opacity = '1';
+        });
+        element.addEventListener('mouseleave', () => {
+            element.style.opacity = '.4';
+        });
+    }
+    addActions(divPrev);
+    addActions(divNext);
 }
