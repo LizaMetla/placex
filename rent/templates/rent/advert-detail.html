@@ -70,6 +70,9 @@
                             {% if advert.phone_number %}
                                 <p>{{ advert.phone_number }}</p>
                             {% endif %}
+                        {% if advert.owner_name %}
+                                <p>{{ advert.owner_name }}</p>
+                            {% endif %}
                             {% if advert.count_room %}
                                 <p>{{ advert.count_room }}</p>
                             {% endif %}

@@ -71,6 +71,10 @@ def site_parser(bot, chat_id, message='', rooms=[]):
         for room in rooms:
             room_link = room.get('link')
             print(room)
+            advert = Advert.objects.filter(link=room_link).first()
+            if advert:
+                advert.date_advert = room.get('date_advert')
+                advert.save()
             if not Advert.objects.filter(link=room_link):
                 image = room.pop('image')
                 images = room.pop('images')

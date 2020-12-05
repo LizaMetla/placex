@@ -20,7 +20,11 @@ def get_all_onliner_rooms() -> list:
     rooms = json.loads(response.content.decode('UTF-8')).get('apartments')
     rooms_list = []
     for room in rooms:
-        if Advert.objects.filter(link=room.get('url')).exists():
+        try:
+            date_advert = parse(room.get('last_time_up')).date()
+        except:
+            date_advert = date.today()
+        if Advert.objects.filter(link=room.get('url'), date_advert=date_advert).exists():
             continue
         address = room.get('location', dict()).get('address')
         room_page = requests.get(room.get('url')).text
@@ -33,8 +37,10 @@ def get_all_onliner_rooms() -> list:
          '3_rooms': 3,
          '4_rooms': 4}.get(count_room, 1)
         phone_number = ''
+        name = 'Неопознанный олень'
         try:
             images_objs = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-cover__thumbnail')
+            name = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended')[0].text.replace('\n', '').replace(' ', '')
             description = get_first_or_none(BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended-bottom')).text
             phone_number = BeautifulSoup(room_page, "html.parser").find_all('ul', class_='apartment-info__list apartment-info__list_phones')[0].find_all('li', class_='apartment-info__item apartment-info__item_secondary')[0].text.replace('\n', '')
             if description:
@@ -47,7 +53,7 @@ def get_all_onliner_rooms() -> list:
             pass
         rooms_list.append(
             {'link': room.get('url'), 'image': room.get('photo'), 'price': float(room.get('price').get('amount')),
-             'address': address, 'images': images_urls, 'description': description,'phone_number':phone_number, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
+             'address': address, 'owner_name':name, 'date_advert':date_advert, 'images': images_urls, 'description': description,'phone_number':phone_number, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
     return rooms_list
 
 
@@ -112,6 +118,11 @@ def get_all_hata_rooms() -> list:
         price = get_first_or_none(item.find_all(class_='price'))
         price_link = price.div.text
         prices = re.findall(r'\d+', price_link)
+        name = ''
+        try:
+            name = BeautifulSoup(response.text, 'html.parser').find_all('div', class_='contacts')[0].find_all('div', class_='contact_block my-1')[0].find_all('div', class_='')[0].text.replace('\n', '').replace(' ', '')
+        except:
+            name = 'Неопознанный дельфин'
         if len(prices) >= 1:
             price = float(prices[0])
         else:
@@ -129,6 +140,7 @@ def get_all_hata_rooms() -> list:
                            'description': description,
                            'count_room': count_room,
                            'phone_number':phone_number,
-                           'date_advert':date_advert})
+                           'date_advert':date_advert,
+                           'owner_name':name})
 
     return rooms_list
