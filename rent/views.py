@@ -75,10 +75,24 @@ class CustomLoginView(LoginView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         register_data = self.request.POST.copy()
+        self.request.session.save()
+        self.request.session['is_error'] = not context['form'].is_valid()
+        self.request.session.save()
         register_data.update({'email': register_data.get('username')})
         context['registration_form'] = CustomUserCreationForm(self.request.POST or None)
         context['view_name'] = 'login'
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(*args, **kwargs)
+        response = super(CustomLoginView, self).post(request, *args, **kwargs)
+        if not context['form'].is_valid():
+            next = self.request.GET.get('next')
+            if next:
+                return HttpResponseRedirect(next)
+            return redirect('home')
+        else:
+            return response
+
 
 
 class RegisterView(View):

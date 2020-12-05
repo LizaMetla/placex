@@ -109,16 +109,21 @@ function autorisationInAddingAnnounce(autorisation, url) {
 
 // error in validation
 
-function logInValidation(err) {
+function logInValidation() {
+
+    const err = document.querySelector('#v-login-errors').value;
+
     if (err !== '') {
+
         const p = document.createElement('p');
         p.textContent = 'Логин или пароль введены неверно!';
         p.setAttribute('class', 'validation-error')
         document.querySelector('#log-in-password').after(p);
+        $("#log-in-btn").click();
     }
 }
 
-logInValidation('');
+logInValidation();
 
 // mask for phone
 // var phone = document.querySelector('#phone');
