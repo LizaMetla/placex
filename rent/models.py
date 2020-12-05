@@ -38,6 +38,7 @@ class Advert(models.Model):
     see_counter = models.IntegerField(default=0, blank=True)
     count_room = models.IntegerField(default=1)
     link = models.TextField(null=True, blank=True)
+    is_agent = models.BooleanField(default=False)
     def __str__(self):
         return self.address
     class Meta:

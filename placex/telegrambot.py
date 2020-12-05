@@ -78,7 +78,7 @@ def echo(bot, context):
                                                              'Спасибо 😉')
 
     elif is_permissions == True:
-        context.bot.send_message(bot, chat_id, bot.message.text)
+        context.bot.send_message(bot, chat_id, text=bot.message.text)
 
 
 def error(bot, update, error):

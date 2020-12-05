@@ -1,22 +1,49 @@
 import json
 import re
+import time
 
 import requests
 from bs4 import BeautifulSoup
 
+from rent.models import Advert
 
+
+def get_first_or_none(obj_list: list):
+    return obj_list[0] if obj_list else None
 def get_all_onliner_rooms() -> list:
-    params = f"only_owner=true&price%5Bmin%5D=1&price%5Bmax%5D=1000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
+    params = f"price%5Bmin%5D=1&price%5Bmax%5D=1000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
     response = requests.get(
         f"https://ak.api.onliner.by/search/apartments?{params}&bounds%5Blb%5D%5Blat%5D=53.8284204609269&bounds%5Blb%5D%5Blong%5D=27.440757751464847&bounds%5Brt%5D%5Blat%5D=53.96800258730025&bounds%5Brt%5D%5Blong%5D=27.683486938476566")
     print(json.loads(response.content.decode('UTF-8')))
     rooms = json.loads(response.content.decode('UTF-8')).get('apartments')
     rooms_list = []
     for room in rooms:
+        if Advert.objects.filter(link=room.get('url')).exists():
+            continue
         address = room.get('location', dict()).get('address')
+        room_page = requests.get(room.get('url')).text
+        time.sleep(3)
+        images_urls = []
+        description = ''
+        count_room = room.get('rent_type')
+        count_room = {'1_room': 1,
+         '2_rooms': 2,
+         '3_rooms': 3,
+         '4_rooms': 4}.get(count_room, 1)
+        try:
+            images_objs = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-cover__thumbnail')
+            description = get_first_or_none(BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended-bottom')).text
+            if description:
+                description = ' '.join(description.split())
+            for images_obj in images_objs:
+                image_url = re.search(r"(?:\(['\"]?)(.*?)(?:['\"]?\))", images_obj.attrs.get('style')).group(1)
+                if image_url and image_url!=room.get('photo'):
+                    images_urls.append(image_url)
+        except:
+            pass
         rooms_list.append(
             {'link': room.get('url'), 'image': room.get('photo'), 'price': float(room.get('price').get('amount')),
-             'address': address})
+             'address': address, 'images': images_urls, 'description': description, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
     return rooms_list
 
 
@@ -44,8 +71,7 @@ def get_all_kufar_rooms():
     return rooms_list
 
 
-def get_first_or_none(obj_list: list):
-    return obj_list[0] if obj_list else None
+
 
 
 def get_all_hata_rooms() -> list:
@@ -57,8 +83,13 @@ def get_all_hata_rooms() -> list:
     catalog_items = soup.find_all('div', class_='b-catalog-table__item')
     for item in catalog_items:
         img = get_first_or_none(item.find_all(class_='img-fluid'))
+        description = ' '.join(item.find_all(class_='description')[0].text.split())
         img_link = img.get('data-lazy')
-
+        images = []
+        for i, image_obj in enumerate(item.find_all(class_='img-fluid')):
+            if i == 0:
+                continue
+            images.append(image_obj.get('data-lazy'))
         title = get_first_or_none(item.find_all(class_='title'))
         link = title.a.get('href')
         address = title.a.text
@@ -72,5 +103,9 @@ def get_all_hata_rooms() -> list:
         rooms_list.append({'image': img_link,
                            'link': link,
                            'address': " ".join(address.split()),
-                           'price': price})
+                           'price': price,
+                           'images': images,
+                           'is_agent': False,
+                           'description': description})
+
     return rooms_list

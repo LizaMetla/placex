@@ -1,4 +1,5 @@
 import re
+import time
 import traceback
 from io import BytesIO
 from uuid import uuid4
@@ -72,6 +73,7 @@ def site_parser(bot, chat_id, message='', rooms=[]):
             print(room)
             if not Advert.objects.filter(link=room_link):
                 image = room.pop('image')
+                images = room.pop('images')
                 image_obj = None
                 if image:
                     response = requests.get(url=image)
@@ -87,6 +89,17 @@ def site_parser(bot, chat_id, message='', rooms=[]):
                 if image_obj:
                     image_obj.advert = advert
                     image_obj.save()
+                for image_url in images:
+                    response = requests.get(url=image_url)
+                    if response.status_code == 200:
+                        time.sleep(3)
+                        file = response.content
+                        filename = uuid4().hex + '.jpeg'
+                        image_obj = Image.objects.create()
+                        image_obj.file.save(filename, BytesIO(file))
+                        image_obj.advert = advert
+                        image_obj.save()
+
                 advert.save()
                 message_ = f'{advert.link} \n {advert.price} \n Адрес: {advert.address or "Не указан"}'
                 if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
