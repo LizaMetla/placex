@@ -9,3 +9,4 @@ gunicorn==19.9.0
 celery==4.4.7
 django-extensions
 redis==3.5.3
+python-dateutil==2.8.1

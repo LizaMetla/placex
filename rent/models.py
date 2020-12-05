@@ -1,4 +1,5 @@
 import os
+from datetime import date
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -39,6 +40,7 @@ class Advert(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Владелец', blank=True)
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     date_created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
+    date_advert = models.DateField(verbose_name='Дата создания из источников', blank=True, null=True, default=date.today)
     date_updated = models.DateTimeField(verbose_name='Дата обновления', auto_now=True)
     address = models.CharField(verbose_name='Адрес', max_length=200, blank=True, null=True)
     city = models.CharField(verbose_name='Город', max_length=200, null=True, blank=True)
@@ -49,6 +51,7 @@ class Advert(models.Model):
     count_room = models.IntegerField(default=1)
     link = models.TextField(null=True, blank=True)
     is_agent = models.BooleanField(default=False)
+    phone_number = models.CharField(verbose_name='Телефон', max_length=20, null=True, blank=True)
     def __str__(self):
         return self.address
     class Meta:

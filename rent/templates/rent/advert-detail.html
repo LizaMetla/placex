@@ -67,6 +67,12 @@
                         </div>
 
                         <div class="short_overview my-5">
+                            {% if advert.phone_number %}
+                                <p>{{ advert.phone_number }}</p>
+                            {% endif %}
+                            {% if advert.count_room %}
+                                <p>{{ advert.count_room }}</p>
+                            {% endif %}
                             {% if advert.description %}
                                 <p>{{ advert.description }}</p>
                             {% endif %}

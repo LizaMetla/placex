@@ -1,9 +1,11 @@
 import json
 import re
 import time
+from datetime import date
 
 import requests
 from bs4 import BeautifulSoup
+from dateutil.parser import parse
 
 from rent.models import Advert
 
@@ -30,9 +32,11 @@ def get_all_onliner_rooms() -> list:
          '2_rooms': 2,
          '3_rooms': 3,
          '4_rooms': 4}.get(count_room, 1)
+        phone_number = ''
         try:
             images_objs = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-cover__thumbnail')
             description = get_first_or_none(BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended-bottom')).text
+            phone_number = BeautifulSoup(room_page, "html.parser").find_all('ul', class_='apartment-info__list apartment-info__list_phones')[0].find_all('li', class_='apartment-info__item apartment-info__item_secondary')[0].text.replace('\n', '')
             if description:
                 description = ' '.join(description.split())
             for images_obj in images_objs:
@@ -43,7 +47,7 @@ def get_all_onliner_rooms() -> list:
             pass
         rooms_list.append(
             {'link': room.get('url'), 'image': room.get('photo'), 'price': float(room.get('price').get('amount')),
-             'address': address, 'images': images_urls, 'description': description, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
+             'address': address, 'images': images_urls, 'description': description,'phone_number':phone_number, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
     return rooms_list
 
 
@@ -58,6 +62,8 @@ def get_all_kufar_rooms():
 
     rooms_list = []
     for room in rooms:
+        if Advert.objects.filter(link=room.get('ad_link')).exists():
+            continue
         image = room.get("images").pop()
         prices = re.findall(r'\d+', room.get('price_usd')[:3])
         if len(prices) >= 1:
@@ -92,6 +98,16 @@ def get_all_hata_rooms() -> list:
             images.append(image_obj.get('data-lazy'))
         title = get_first_or_none(item.find_all(class_='title'))
         link = title.a.get('href')
+        response = requests.get(link)
+        try:
+            phone_number = BeautifulSoup(response.text, 'html.parser').find_all('div', class_='contacts')[0].find_all('div', class_='contact_block my-1')[-1].find_all('div', class_='')[0].text.replace('\n', '').replace(' ', '')
+        except:
+            phone_number = ''
+        try:
+            date_advert = parse(re.search(r'\d+\.\d+.\d+', BeautifulSoup(response.text, 'html.parser').find_all('div', class_='b-card__view-info')[0].find_all('span', class_='item')[-1].text.strip()).group(0)).date()
+        except:
+            date_advert = date.today()
+        time.sleep(1)
         address = title.a.text
         price = get_first_or_none(item.find_all(class_='price'))
         price_link = price.div.text
@@ -111,6 +127,8 @@ def get_all_hata_rooms() -> list:
                            'images': images,
                            'is_agent': False,
                            'description': description,
-                           'count_room': count_room})
+                           'count_room': count_room,
+                           'phone_number':phone_number,
+                           'date_advert':date_advert})
 
     return rooms_list
