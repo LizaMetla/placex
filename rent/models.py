@@ -21,6 +21,16 @@ class User(AbstractUser):
     is_onliner = models.BooleanField(default=True, blank=True)
     is_hata = models.BooleanField(default=False, blank=True)
     chat_id = models.CharField(max_length=50, blank=True, null=True)
+
+    def get_username(self):
+        if self.name:
+            return self.name
+        elif self.username:
+            return self.username
+        elif self.email:
+            return self.email
+        else:
+            return ''
 class AdvertManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active_admin=True)

@@ -67,7 +67,10 @@
                         </div>
 
                         <div class="short_overview my-5">
-                            <p>{{ advert.description }}</p>
+                            {% if advert.description %}
+                                <p>{{ advert.description }}</p>
+                            {% endif %}
+
                         </div>
 
                         <!-- Add to Cart Form -->
