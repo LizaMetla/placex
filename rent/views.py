@@ -58,6 +58,7 @@ class AdvertDetailView(DetailView):
         context['view_name'] = 'advert_detail'
         context['advert'].see_counter += 1
         context['advert'].save()
+        context['images_list'] = [image.file.url for image in context['advert'].images.all()]
         return context
 
 
