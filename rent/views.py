@@ -25,6 +25,7 @@ class BotView(AbsAuthView, TemplateView):
     template_name = 'rent/bot.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['view_name'] = 'bot'
         if self.request.user.attachment_code:
             attachment_code = self.request.user.attachment_code
         else:
