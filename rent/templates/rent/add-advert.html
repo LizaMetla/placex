@@ -1,6 +1,6 @@
 {% extends 'rent/base.html' %}
 {% block context %}
-    <div class="container">
+    <div class="container v-position-form">
         <h2 class="text-center center__elem-announce" id="announce-title">{% if advert %}Редактирование объявления{% else %}Добавление объявления{% endif %}</h2>
         <hr class="center__elem-announce">
         <form action="{% if advert %}{% url 'advert_edit' advert.pk %}{% endif %}" method="post" class="announce-form"

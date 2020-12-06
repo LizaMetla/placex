@@ -266,7 +266,7 @@ i.fa-filter {
 
 .personal-info {
   position: relative;
-  left: 20%;
+  left: 40%;
   display: grid;
   height: 50%;
 }
@@ -293,7 +293,7 @@ i.fa-filter {
 .my-announce {
   position: relative;
   top: 425px;
-  left: -220px;
+  left: 130px;
   width: 759px;
 }
 
@@ -408,6 +408,21 @@ a.advert-detail-article:hover {
   position: relative;
   left: calc(100% - 63% - 80px);
   top: 100%;
+}
+
+.fixposition {
+  position: fixed !important;
+  height: 100%;
+}
+
+.v-content-position {
+  position: relative;
+  right: calc(100% - 120%);
+}
+
+.v-position-form {
+  position: relative;
+  left: 15%;
 }
 
 h1,
