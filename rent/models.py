@@ -55,6 +55,7 @@ class User(AbstractUser):
     is_onliner = models.BooleanField(default=True, blank=True)
     is_hata = models.BooleanField(default=False, blank=True)
     chat_id = models.CharField(max_length=50, blank=True, null=True)
+    attachment_code = models.CharField(max_length=50, blank=True, null=True)
     username = None
     email = models.EmailField(_('email address'), unique=True)
 

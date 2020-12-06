@@ -1,4 +1,5 @@
 import logging
+import re
 
 from django.core.validators import validate_email
 from django_telegrambot.apps import DjangoTelegramBot
@@ -46,6 +47,19 @@ def echo(bot, context):
     user.name = bot.message.chat.first_name or 'Неопознанный' + '' + bot.message.chat.last_name or 'клиент'
     user.save()
     is_permissions = True
+    search_res = re.search(r'<placex>.+</placex>', bot.message.text)
+    if search_res:
+        code = search_res.group(0)
+        code = code.replace('<placex>', '').replace('</placex>', '')
+        user_in_site = User.objects.filter(attachment_code=code).first()
+        if user_in_site and user_in_site!=user:
+            user_in_site.chat_id = user.chat_id
+            user_in_site.is_send = user.is_send
+            user_in_site.is_onliner = user.is_onliner
+            user_in_site.is_kufar = user.is_kufar
+            user_in_site.save()
+            user.delete()
+            user = user_in_site
 
     if not user.is_send:
         is_permissions = False
@@ -77,7 +91,10 @@ def echo(bot, context):
                                                              'Спасибо 😉')
 
     elif is_permissions == True:
-        context.bot.send_message(bot, chat_id, text=bot.message.text)
+        if search_res:
+            context.bot.send_message(chat_id, text=f'{user.name}, спасибо, что связали бота с профилем placex.\nТеперь Вы можете выполнить настройку бота через /help или из профиля placex')
+        else:
+            context.bot.send_message(chat_id, text=bot.message.text)
 
 
 def error(bot, update, error):

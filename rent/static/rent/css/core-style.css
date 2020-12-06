@@ -114,7 +114,19 @@ body {
   overflow: hidden;
   background-color: rgba(0,0,0,.5);
 }
-
+ul.styled-list {
+  margin-top: 0.5rem;
+  padding-left: 0.75rem;
+}
+ul.styled-list li {
+  color: #FBD826;
+  padding-left: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+ul.styled-list li p {
+  display: inline;
+  color: #212121;
+}
 .log-in-window {
   position: fixed;
   top: calc(50% - 250px);

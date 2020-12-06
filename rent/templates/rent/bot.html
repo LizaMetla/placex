@@ -1,6 +1,48 @@
 {% extends 'rent/base.html' %}
 {% block context %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-12 col-xl-12 mx-auto align-self-start">
 
-<input type="text" name="code" id="code" class="bot-code">
-<button class="btn amado-btn copy-btn">Скопировать</button>
+                <div>
+                    <h3 class="mb-4 inline-flex">Свяжите Ваш профиль с <b>Telegram</b> ботом!</h3>
+                </div>
+                <p class="mb-3">
+                    Для настройки Вашего бота потребуется привязать профиль на нашем сайте с Telegram-ботом.
+                </p>
+                <p>Для связки:</p>
+                <ul class="styled-list">
+                    <li>
+                        <p><i class="fa fa-check" aria-hidden="true"></i>скопируйте ссылку ниже</p>
+                    </li>
+                    <li>
+                        <p><i class="fa fa-check" aria-hidden="true"></i>откройте Telegram по ссылке <a href="https://t.me/PlaceX_bot">t.me/PlaceX_bot</a> или в поиске введите @PlaceX_bot </p>
+                    </li>
+                    <li>
+                        <p><i class="fa fa-check" aria-hidden="true"></i>отправьте боту сообщение с ссылкой</p>
+                    </li>
+                    <li>
+                        <p><i class="fa fa-check" aria-hidden="true"></i>настройте бота под себя, для этого отправьте /help, чтобы узнать подробности настройки </p>
+                    </li>
+                </ul>
+
+
+            </div>
+
+        </div>
+        <div class="row justify-content-start">
+            <div class="col mx-auto">
+                <input type="text" class="url read mt-3 w-75 h-100" name="code" id="code" value="{{ attachment_code }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mx-0 my-4">
+                <button class="btn amado-btn copy-btn">Скопировать</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
 {% endblock %}

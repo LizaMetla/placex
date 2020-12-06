@@ -1,4 +1,5 @@
 import urllib
+from uuid import uuid4
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,8 +21,21 @@ from rent.models import Advert, Image, User
 class AbsAuthView(LoginRequiredMixin):
     login_url = reverse_lazy('login')
 
-class BotView(TemplateView):
+class BotView(AbsAuthView, TemplateView):
     template_name = 'rent/bot.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.attachment_code:
+            attachment_code = self.request.user.attachment_code
+        else:
+            code = uuid4().hex
+            attachment_code = code
+            self.request.user.attachment_code = code
+            self.request.user.save()
+        full_attachment_code = f'<placex>{attachment_code}</placex>'
+        context['attachment_code'] = full_attachment_code
+        return context
+
 class DefaultPageView(ListView):
     template_name = 'rent/index.html'
     paginate_by = 50
