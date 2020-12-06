@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
@@ -112,6 +112,25 @@ class RegisterView(View):
     def post(self, request, *args, **kwargs):
         return redirect('home')
     # def get_context_data(self, **kwargs):
+
+class EditAdvertView(AbsAuthView, TemplateView):
+    template_name = 'rent/add-advert.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = AdvertForm(self.request.POST or None, self.request.FILES)
+        advert = get_object_or_404(Advert, pk=kwargs.get('pk'))
+        if advert.owner != self.request.user:
+            raise Http404('У Вас нет прав для редактирования данного объявления!')
+        context['advert'] = advert
+        return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if context['form'].is_valid():
+            description = context['form'].cleaned_data.get('description')
+            description = context['form'].cleaned_data.get('price')
+            description = context['form'].cleaned_data.get('description')
+            description = context['form'].cleaned_data.get('description')
+
 
 
 class AddAdvertView(AbsAuthView, TemplateView):

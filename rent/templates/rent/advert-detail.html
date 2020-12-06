@@ -23,13 +23,14 @@
                                             style="background-image: url({{ image.file.url }}); flex: 0 0 32%;">
                                         </li>
                                     {% else %}
-                                        <li class="photo-height" data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}"
+                                        <li class="photo-height" data-target="#product_details_slider"
+                                            data-slide-to="{{ forloop.counter0 }}"
                                             style="background-image: url({{ image.file.url }}); flex: 0 0 32%;">
                                         </li>
                                     {% endif %}
                                 {% endfor %}
                             </ol>
-                            <div class="carousel-inner" onclick="sliderFunc({{images_list}})">
+                            <div class="carousel-inner" onclick="sliderFunc({{ images_list }})">
                                 {% for image in advert.images.all %}
                                     {% if forloop.first %}
                                         <div class="carousel-item active">
@@ -55,22 +56,29 @@
                         <!-- Product Meta Data -->
                         <div class="product-meta-data">
                             <div class="line"></div>
-                            <p class="product-price">${{ advert.price }} </p> <i class="fa fa-eye" aria-hidden="true"></i> {{ advert.see_counter }}
+                            <p class="product-price">${{ advert.price }} </p> <i class="fa fa-eye"
+                                                                                 aria-hidden="true"></i> {{ advert.see_counter }}
 
-                                <h3>{{ advert.address }}</h3>
-                                {% if advert.link %}
-                                <h6><a href="{{ advert.link }}">Оригинал</a> </h6>
+                            <h3>{{ advert.address }}</h3>
+                            {% if advert.owner == request.user %}
+                                <h3><a href="{% url 'advert_edit' advert.pk %}">Редактировать</a></h3>
+                            {% endif %}
+                            {% if advert.link %}
+                                <h6><a href="{{ advert.link }}">Оригинал</a></h6>
+                                {% if advert.owner == request.user %}
+                                    <h6><a href="{% url 'advert_edit' advert.pk %}">Редактировать</a></h6>
                                 {% endif %}
 
+                            {% endif %}
 
-                            
+
                         </div>
 
                         <div class="short_overview my-5">
                             {% if advert.phone_number %}
                                 <p>{{ advert.phone_number }}</p>
                             {% endif %}
-                        {% if advert.owner_name %}
+                            {% if advert.owner_name %}
                                 <p>{{ advert.owner_name }}</p>
                             {% endif %}
                             {% if advert.count_room %}
