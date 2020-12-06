@@ -14,16 +14,16 @@
                 <div class="col-12 col-lg-7">
                     <div class="single_product_thumb">
                         <div id="product_details_slider" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
+                            <ol class="carousel-indicators gallery-flex">
 
                                 {% for image in advert.images.all %}
                                     {% if forloop.first %}
-                                        <li class="active" data-target="#product_details_slider"
+                                        <li class="photo-height active" data-target="#product_details_slider"
                                             data-slide-to="{{ forloop.counter0 }}"
                                             style="background-image: url({{ image.file.url }});">
                                         </li>
                                     {% else %}
-                                        <li data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}"
+                                        <li class="photo-height" data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}"
                                             style="background-image: url({{ image.file.url }});">
                                         </li>
                                     {% endif %}
