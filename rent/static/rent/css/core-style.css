@@ -315,6 +315,18 @@ i.fa-filter {
   cursor: pointer;
 }
 
+.gallery-flex {
+  top: 101%;
+  left: -95px;
+  right: -95px;
+  flex-wrap: wrap;
+}
+
+.photo-height {
+  margin-bottom: 5px;
+  height: 135px;
+}
+
 h1,
 h2,
 h3,
