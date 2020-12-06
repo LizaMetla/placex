@@ -16,7 +16,6 @@ def get_all_onliner_rooms() -> list:
     params = f"price%5Bmin%5D=1&price%5Bmax%5D=1000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
     response = requests.get(
         f"https://ak.api.onliner.by/search/apartments?{params}&bounds%5Blb%5D%5Blat%5D=53.8284204609269&bounds%5Blb%5D%5Blong%5D=27.440757751464847&bounds%5Brt%5D%5Blat%5D=53.96800258730025&bounds%5Brt%5D%5Blong%5D=27.683486938476566")
-    print(json.loads(response.content.decode('UTF-8')))
     rooms = json.loads(response.content.decode('UTF-8')).get('apartments')
     rooms_list = []
     for room in rooms:
@@ -27,8 +26,9 @@ def get_all_onliner_rooms() -> list:
         if Advert.objects.filter(link=room.get('url'), date_advert=date_advert).exists():
             continue
         address = room.get('location', dict()).get('address')
+        print(room)
         room_page = requests.get(room.get('url')).text
-        time.sleep(3)
+        time.sleep(1)
         images_urls = []
         description = ''
         count_room = room.get('rent_type')
@@ -48,6 +48,7 @@ def get_all_onliner_rooms() -> list:
             for images_obj in images_objs:
                 image_url = re.search(r"(?:\(['\"]?)(.*?)(?:['\"]?\))", images_obj.attrs.get('style')).group(1)
                 if image_url and image_url!=room.get('photo'):
+                    print(image_url)
                     images_urls.append(image_url)
         except:
             pass
@@ -113,7 +114,6 @@ def get_all_hata_rooms() -> list:
             date_advert = parse(re.search(r'\d+\.\d+.\d+', BeautifulSoup(response.text, 'html.parser').find_all('div', class_='b-card__view-info')[0].find_all('span', class_='item')[-1].text.strip()).group(0)).date()
         except:
             date_advert = date.today()
-        time.sleep(1)
         address = title.a.text
         price = get_first_or_none(item.find_all(class_='price'))
         price_link = price.div.text
@@ -131,16 +131,19 @@ def get_all_hata_rooms() -> list:
             count_room = int(re.search(r'\d+-комнатная', item.text).group(0).split('-')[0].strip())
         except:
             count_room = 1
-        rooms_list.append({'image': img_link,
-                           'link': link,
-                           'address': " ".join(address.split()),
-                           'price': price,
-                           'images': images,
-                           'is_agent': False,
-                           'description': description,
-                           'count_room': count_room,
-                           'phone_number':phone_number,
-                           'date_advert':date_advert,
-                           'owner_name':name})
+
+        room = {'image': img_link,
+         'link': link,
+         'address': " ".join(address.split()),
+         'price': price,
+         'images': images,
+         'is_agent': False,
+         'description': description,
+         'count_room': count_room,
+         'phone_number': phone_number,
+         'date_advert': date_advert,
+         'owner_name': name}
+        print(room)
+        rooms_list.append(room)
 
     return rooms_list

@@ -33,6 +33,7 @@ def get_rooms_for_user():
     rooms = []
     for key, parser_func in PARSERS.items():
         rooms.extend(parser_func())
+    print(rooms)
     return rooms
 
 
@@ -96,7 +97,7 @@ def site_parser(bot, chat_id, message='', rooms=[]):
                 for image_url in images:
                     response = requests.get(url=image_url)
                     if response.status_code == 200:
-                        time.sleep(3)
+                        time.sleep(1)
                         file = response.content
                         filename = uuid4().hex + '.jpeg'
                         image_obj = Image.objects.create()
