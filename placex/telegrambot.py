@@ -55,7 +55,6 @@ def echo(bot, context):
         try:
             validate_email(bot.message.text)
             user.email = bot.message.text
-            user.username = bot.message.text
             user.save()
             # if user.email in ADMIN_EMAILS:
             user.is_onliner = True

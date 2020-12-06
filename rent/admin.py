@@ -12,15 +12,38 @@ from .models import User
 @admin.register(Advert)
 class AdvertAdmin(admin.ModelAdmin):
     list_display = ('address', 'price', 'link')
+    search_fields = ('address', 'link')
 
 admin.site.register(Image)
 
 
 
+# class CustomUserAdmin(UserAdmin):
+#     add_form = CustomUserCreationForm
+#     form = CustomUserChangeForm
+#     model = User
+#     list_display = ['email', 'username', 'chat_id', 'name', 'is_active']
+
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ['email', 'username', 'chat_id', 'name', 'is_active']
+    list_display = ('email', 'chat_id', 'name', 'is_active')
+    list_filter = ('email', 'is_staff', 'is_active',)
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active')}),
+        ('Fields', {'fields': ('chat_id', 'name', 'price_max', 'price_min', 'phone_number', 'is_agent', 'favorites', 'image', 'is_send',
+                               'is_kufar', 'is_onliner', 'is_hata')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
+        ),
+    )
+    search_fields = ('email',)
+    ordering = ('email',)
+    autocomplete_fields = ('favorites', )
 
 admin.site.register(User, CustomUserAdmin)

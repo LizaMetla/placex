@@ -10,11 +10,13 @@
         {% static 'rent/img/core-img/plusman.png' %}
     {% endif %}
 {% endblock %}
-{% block profile_username %}{{ request.user.username }}
+{% block profile_username %}{{ request.user.email }}
 {% endblock %}
 {% block profile_name %}{{ request.user.name }}
 {% endblock %}
 {% block profile_password %}
 {% endblock %}
+{% block is_agent %}{% if request.user.is_agent %}checked{% endif %}{% endblock %}
+{% block profile_phone %}{% if request.user.phone_number %}{{ request.user.phone_number }}{% endif %}{% endblock %}
 {% block page_title %}Редактирование профиля{% endblock %}
 {% block profile_submit %}Редактировать{% endblock %}

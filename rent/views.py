@@ -1,6 +1,6 @@
 import urllib
 
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
@@ -13,7 +13,7 @@ from django.views import View
 
 from django.views.generic import TemplateView, DetailView, ListView
 
-from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm, CustomUserChangeForm
+from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm, CustomUserChangeForm, CustomUserAuthForm
 from rent.models import Advert, Image, User
 
 
@@ -69,29 +69,42 @@ class MyAdvertsView(TemplateView):
         return render(request, self.template_name, {})
 
 
-class CustomLoginView(LoginView):
+class CustomLoginView(TemplateView):
     template_name = 'rent/login.html'
-
+    authentication_form = CustomUserAuthForm
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         register_data = self.request.POST.copy()
-        self.request.session.save()
-        self.request.session['is_error'] = not context['form'].is_valid()
-        self.request.session.save()
-        register_data.update({'email': register_data.get('username')})
+        context['form'] = self.authentication_form(self.request.POST or None)
         context['registration_form'] = CustomUserCreationForm(self.request.POST or None)
         context['view_name'] = 'login'
         return context
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
-        response = super(CustomLoginView, self).post(request, *args, **kwargs)
-        if not context['form'].is_valid():
+        if context['form'].is_valid():
+            email = context['form'].cleaned_data.get('email')
+            password = context['form'].cleaned_data.get('password')
+            login_user = authenticate(email=email,
+                                      password=password)
+            if login_user:
+                login(self.request, login_user)
+                self.request.session.save()
+                self.request.session['is_error'] = False
+                self.request.session.save()
+            else:
+                self.request.session.save()
+                self.request.session['is_error'] = True
+                self.request.session.save()
+
             next = self.request.GET.get('next')
             if next:
                 return HttpResponseRedirect(next)
             return redirect('home')
         else:
-            return response
+            next = self.request.GET.get('next')
+            if next:
+                return HttpResponseRedirect(next)
+            return redirect('home')
 
 
 
@@ -132,8 +145,6 @@ class RegistrationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         request_data = self.request.POST.copy()
-        if request_data:
-            request_data['email'] = request_data.get('username')
         context['registration_form'] = CustomUserCreationForm(request_data or None, self.request.FILES)
         return context
 
@@ -141,6 +152,8 @@ class RegistrationView(TemplateView):
         context = self.get_context_data(**kwargs)
         if context['registration_form'].is_valid():
             user = context['registration_form'].save()
+            user.email = context['registration_form'].cleaned_data.get('email')
+            user.save()
             login(request, user=user)
             return redirect('home')
         return render(request, self.template_name, context)
@@ -206,14 +219,18 @@ class EditProfileView(AbsAuthView, TemplateView):
     template_name = 'rent/edit-profile.html'
     def post(self, request, *args, **kwargs):
         name = self.request.POST.get('name')
-        phone = self.request.POST.get('phone')
-        username = self.request.POST.get('username')
+        phone = self.request.POST.get('phone_number')
+        email = self.request.POST.get('email')
         image = self.request.FILES.get('image')
-        if User.objects.filter(~Q(username=self.request.user.username),username=username).exists():
+        is_agent = self.request.POST.get('is_agent')
+        if is_agent == 'on':
+            self.request.user.is_agent = True
+        if is_agent is None:
+            self.request.user.is_agent = False
+        if User.objects.filter(~Q(email=self.request.user.email),email=email).exists():
             return render(request, self.template_name, context={})
         self.request.user.name = name
-        self.request.user.username = username
-        self.request.user.email = username
+        self.request.user.email = email
         self.request.user.phone_number = phone
         if image:
             self.request.user.image = image

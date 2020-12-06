@@ -41,7 +41,6 @@ services:
     build: .
     image: *img
     command: python manage.py botpolling --username=PlaceX_bot
-    restart: always
     volumes:
       - .:/code
     depends_on:

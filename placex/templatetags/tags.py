@@ -7,4 +7,4 @@ register = template.Library()
 def set_error_false(request):
     request.session['is_error'] = False
     request.session.save()
-    return None
+    return ''

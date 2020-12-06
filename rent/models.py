@@ -7,13 +7,46 @@ from django.db import models
 
 # Create your models here.
 from django.dispatch import receiver
+from django.contrib.auth.base_user import BaseUserManager
+from django.utils.translation import ugettext_lazy as _
 
+
+class CustomUserManager(BaseUserManager):
+    """
+    Custom user model manager where email is the unique identifiers
+    for authentication instead of usernames.
+    """
+    def create_user(self, email, password, **extra_fields):
+        """
+        Create and save a User with the given email and password.
+        """
+        if not email:
+            raise ValueError(_('The Email must be set'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        """
+        Create and save a SuperUser with the given email and password.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
     name = models.CharField(verbose_name='ФИО', max_length=50, null=True, blank=True)
     price_max = models.IntegerField(verbose_name='Максимальная цена', default=500, blank=True)
     price_min = models.IntegerField(verbose_name='Минимальная цена', default=0, blank=True)
-    phone_number = models.CharField(verbose_name='Телефон', max_length=20, null=True, blank=True)
+    phone_number = models.CharField(verbose_name='Телефон', max_length=200, null=True, blank=True)
     is_agent = models.BooleanField(default=False)
     favorites = models.ManyToManyField('Advert', blank=True)
     image = models.ImageField(null=True, blank=True)
@@ -22,12 +55,17 @@ class User(AbstractUser):
     is_onliner = models.BooleanField(default=True, blank=True)
     is_hata = models.BooleanField(default=False, blank=True)
     chat_id = models.CharField(max_length=50, blank=True, null=True)
+    username = None
+    email = models.EmailField(_('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
 
     def get_username(self):
         if self.name:
             return self.name
-        elif self.username:
-            return self.username
         elif self.email:
             return self.email
         else:
@@ -52,7 +90,7 @@ class Advert(models.Model):
     count_room = models.IntegerField(default=1)
     link = models.TextField(null=True, blank=True)
     is_agent = models.BooleanField(default=False)
-    phone_number = models.CharField(verbose_name='Телефон', max_length=20, null=True, blank=True)
+    phone_number = models.CharField(verbose_name='Телефон', max_length=200, null=True, blank=True)
     def __str__(self):
         return self.address
     class Meta:

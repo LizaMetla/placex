@@ -12,7 +12,7 @@
         <p>Имя: {{ request.user.name }}</p>
         <p>Телефон: {{ request.user.phone_number }}</p>
         <p>E-mail: {{ request.user.email }}</p>
-        <p>Агенство недвижимости: {{ request.user.is_agent }}</p>
+        <p>Агенство недвижимости: {% if request.user.is_agent %}Да{% else %}Нет{% endif %}</p>
         <a href="{% url 'profile_edit'%}" style="margin-bottom: 16px;"><button class="edit__profile" style="background-color: #fbb808;"> Редактировать </button></a>
     </div>
     
@@ -32,7 +32,7 @@
                              style="width:400px;height:350px;">
                         <div class="hover-content">
                             <div class="line"></div>
-                            <p>From {{ advert.price }}</p>
+                            <p>{{ advert.price }}</p>
                             <h4>{{ advert.address }}</h4>
                         </div>
                     </a>

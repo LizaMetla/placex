@@ -23,7 +23,7 @@
 								<input type="text" name="phone_number" id="phone" class="form-control input-lg" placeholder="Телефон" value="{% block profile_phone %}{% endblock %}" required="">
 							</div>
 							<div class="form-group">
-								<input type="email" name="username" id="email" class="form-control input-lg" placeholder="E-mail" value="{% block profile_username %}{% endblock %}" required="">
+								<input type="email" name="email" id="email" class="form-control input-lg" placeholder="E-mail" value="{% block profile_username %}{% endblock %}" required="">
 							</div>
                         {% block profile_password %}
 							<div class="form-group">
@@ -35,7 +35,7 @@
 							{% endblock %}
 							<div class="is_agent">
 								<label for="is_agent">Агенство недвижимости</label>
-								<input type="checkbox" name="is_agent" id="is_agent" class="is_agent">
+								<input type="checkbox" name="is_agent" id="is_agent" class="is_agent" {% block is_agent %}{% endblock %}>
 							</div>
  							<div>
  								<input type="submit" class="btn btn-lg btn-primary btn__reg"   value="{% block profile_submit %}Регистрация{% endblock %}">
