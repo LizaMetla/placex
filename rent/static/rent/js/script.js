@@ -111,7 +111,6 @@ function logInValidation() {
     const err = document.querySelector('#v-login-errors').value;
 
     if (err !== '') {
-
         const p = document.createElement('p');
         p.textContent = 'Логин или пароль введены неверно!';
         p.setAttribute('class', 'validation-error')
@@ -119,7 +118,9 @@ function logInValidation() {
         $("#log-in-btn").click();
     }
 }
+
 logInValidation();
+
 // slider
 function sliderFunc(arrImages) {
     const imageinSlider = document.querySelector('img.mfp-img');
@@ -152,18 +153,18 @@ function sliderFunc(arrImages) {
     }
     addActions(divPrev);
     addActions(divNext);
-    console.log(arrImages);
+
+    let sliderIndex = 1;
+
+    for (let i = 0; i < arrImages.length; i++) {
+        if (imageinSlider.src.slice(21) === arrImages[i]) {
+            sliderIndex = i + 1;
+        }
+    }
+
     function sliderWork(images) {
         const prev = document.querySelector('.prevSlider');
         const next = document.querySelector('.nextSlider');
-
-        let sliderIndex = 1;
-
-        for (let i = 0; i < images.length; i++) {
-            if (imageinSlider.src.slice(21) === images[i]) {
-                sliderIndex = i + 1;
-            }
-        }
 
         function showSlides(n) {
             if (n > images.length) {
@@ -171,25 +172,25 @@ function sliderFunc(arrImages) {
             }
 
             if (n < 1) {
-                sliderIndex = image.length;
+                sliderIndex = images.length;
             }
 
-            // console.log(`${imageinSlider.src.slice(0, 21)}${images[sliderIndex - 1]}`)
             imageinSlider.src = `${imageinSlider.src.slice(0, 21)}${images[sliderIndex - 1]}`;
-
-            function plusSlides(n) {
-                showSlides(sliderIndex += n);
-            }
-
-            prev.addEventListener('click', () => {
-                plusSlides(-1);
-            });
-
-            next.addEventListener('click', () => {
-                plusSlides(1);
-            });
         }
-        showSlides();
+
+        showSlides(sliderIndex);
+
+        function plusSlides(n) {
+            showSlides(sliderIndex += n);
+        }
+
+        prev.addEventListener('click', (e) => {
+            plusSlides(-1);
+        });
+
+        next.addEventListener('click', (e) => {
+            plusSlides(1);
+        });
     }
     sliderWork(arrImages);
 }
