@@ -108,11 +108,11 @@
                                 </button>
                             </a>
                         {% else %}
-                            <a href="{% url 'add-to-favorite' advert.pk %}?next={% url 'advert-detail' advert.pk %}">
-                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Добавить в
+{#                            <a href="">#}
+                                <button type="submit" name="addtocart" value="5" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true, '{% url 'add-to-favorite' advert.pk %}?next={% url 'advert-detail' advert.pk %}'{% else %}false, '{% url 'advert-detail' advert.pk %}'{% endif %})" class="btn amado-btn">Добавить в
                                     закладки
                                 </button>
-                            </a>
+{#                            </a>#}
                         {% endif %}
                         {% if advert.owner == request.user %}
                             <h3 class="indent"><a href="{% url 'advert_edit' advert.pk %}">
