@@ -145,7 +145,7 @@ function sliderFunc(arrImages) {
     
     function addActions(element) {
         element.addEventListener('mouseenter', () => {
-            element.style.opacity = '1';
+            element.style.opacity = '.8';
         });
         element.addEventListener('mouseleave', () => {
             element.style.opacity = '.4';
