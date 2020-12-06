@@ -20,11 +20,11 @@
                                     {% if forloop.first %}
                                         <li class="photo-height active" data-target="#product_details_slider"
                                             data-slide-to="{{ forloop.counter0 }}"
-                                            style="background-image: url({{ image.file.url }});">
+                                            style="background-image: url({{ image.file.url }}); flex: 0 0 32%;">
                                         </li>
                                     {% else %}
                                         <li class="photo-height" data-target="#product_details_slider" data-slide-to="{{ forloop.counter0 }}"
-                                            style="background-image: url({{ image.file.url }});">
+                                            style="background-image: url({{ image.file.url }}); flex: 0 0 32%;">
                                         </li>
                                     {% endif %}
                                 {% endfor %}
