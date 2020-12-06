@@ -184,12 +184,24 @@ function sliderFunc(arrImages) {
             showSlides(sliderIndex += n);
         }
 
-        prev.addEventListener('click', (e) => {
+        prev.addEventListener('click', () => {
             plusSlides(-1);
         });
 
-        next.addEventListener('click', (e) => {
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowLeft') {
+                plusSlides(-1);
+            }
+        });
+
+        next.addEventListener('click', () => {
             plusSlides(1);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowRight') {
+                plusSlides(1);
+            }
         });
     }
     sliderWork(arrImages);
