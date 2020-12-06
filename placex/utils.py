@@ -33,7 +33,6 @@ def get_rooms_for_user():
     rooms = []
     for key, parser_func in PARSERS.items():
         rooms.extend(parser_func())
-    print(rooms)
     return rooms
 
 

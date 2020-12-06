@@ -15,7 +15,7 @@ from rent.models import User
 from placex.utils import site_parser, get_rooms_for_user
 
 
-@periodic_task(run_every=(crontab(minute='*/10')), name='update_rooms')
+@periodic_task(run_every=(crontab(minute='*/20')), name='update_rooms')
 def update_rooms():
     setting = Settings.objects.all().first()
     if setting is None:
@@ -29,7 +29,6 @@ def update_rooms():
             rooms = []
         print('is_sent')
         for user in User.objects.filter(chat_id__isnull=False, is_send=True, email__isnull=False):
-            print('user found AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
             if user.is_send and user.email:
                 print('bot access ')
                 bot = DjangoTelegramBot.get_bot()
