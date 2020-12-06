@@ -371,6 +371,10 @@ a.advert-detail-article:hover {
   color: #fbb808;
 }
 
+.font-for-adresses {
+  font-family: 'Times New Roman', Times, serif;
+}
+
 h1,
 h2,
 h3,
