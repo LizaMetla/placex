@@ -37,6 +37,11 @@ class DefaultPageView(ListView):
         is_owner = self.request.GET.get('is_owner')
         if is_owner and is_owner == 'on':
             query &= ~Q(owner__is_agent=True)
+        sorting = self.request.GET.get('sorting')
+        if sorting == 'По убыванию цены':
+            return Advert.objects.filter(query).order_by('-date_advert', '-price' )
+        elif sorting == 'По возрастанию цены':
+            return Advert.objects.filter(query).order_by('-date_advert', 'price' )
         return Advert.objects.filter(query)
 
     def get_context_data(self, *args, **kwargs):
