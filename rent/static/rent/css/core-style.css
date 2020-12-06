@@ -278,8 +278,9 @@ i.fa-filter {
 }
 
 .fa-arrow-left, .fa-arrow-right {
-  position: absolute;
-  top: 10px;
+  position: relative;
+  top: calc(50% - 40px);
+  color: #808080;
 }
 
 .fa-arrow-left {
@@ -292,23 +293,25 @@ i.fa-filter {
 
 .prevSlider {
   position: absolute;
-  top: 200px;
+  top: 40px;
   left: 0px;
+  bottom: 40px;
   width: 100px;
-  height: 100px;
   z-index: 10;
   opacity: .4;
+  background-color: #000;
   cursor: pointer;
 }
 
 .nextSlider {
   position: absolute;
-  top: 200px;
+  top: 40px;
   right: 0px;
+  bottom: 40px;
   width: 100px;
-  height: 100px;
   z-index: 10;
   opacity: .4;
+  background-color: #000;
   cursor: pointer;
 }
 
