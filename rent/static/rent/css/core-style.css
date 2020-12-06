@@ -306,7 +306,7 @@ i.fa-filter {
   bottom: 40px;
   width: 100px;
   z-index: 10;
-  opacity: .4;
+  opacity: .1;
   background-color: #000;
   cursor: pointer;
 }
@@ -318,7 +318,7 @@ i.fa-filter {
   bottom: 40px;
   width: 100px;
   z-index: 10;
-  opacity: .4;
+  opacity: .1;
   background-color: #000;
   cursor: pointer;
 }
