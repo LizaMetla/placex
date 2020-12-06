@@ -55,9 +55,9 @@ class DefaultPageView(ListView):
             query &= ~Q(owner__is_agent=True)
         sorting = self.request.GET.get('sorting')
         if sorting == 'По убыванию цены':
-            return Advert.objects.filter(query).order_by('-date_advert', '-price' )
+            return Advert.objects.filter(query).order_by('-price' )
         elif sorting == 'По возрастанию цены':
-            return Advert.objects.filter(query).order_by('-date_advert', 'price' )
+            return Advert.objects.filter(query).order_by('price' )
         return Advert.objects.filter(query)
 
     def get_context_data(self, *args, **kwargs):
