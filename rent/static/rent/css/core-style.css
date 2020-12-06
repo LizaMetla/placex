@@ -383,6 +383,20 @@ a.advert-detail-article:hover {
   font-family: 'Times New Roman', Times, serif;
 }
 
+.bot-code {
+  position: relative;
+  margin: 0 auto;
+  display: block;
+  width: calc(100% - 30%);
+  height: 50px;
+  font-size: 30px;
+}
+
+.copy-btn {
+  position: relative;
+  left: calc(100% - 41% - 80px);
+}
+
 h1,
 h2,
 h3,
