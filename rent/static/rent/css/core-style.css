@@ -77,9 +77,17 @@ body {
   font-size: 15px;
 }
 
-.profile-info .log-in-btn:hover, .registration__link:hover, .profile-info .log-out-btn:hover {
+.profile-info .log-in-btn:hover, .profile-info .log-out-btn:hover {
   color: #3f3d56;
   cursor: pointer;
+  text-decoration: underline;
+}
+
+.registration__link:hover {
+  font-size: 20px;
+  color: #3f3d56;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .modal__close {
