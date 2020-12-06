@@ -58,35 +58,35 @@
                             <div class="line"></div>
                             <p class="product-price">${{ advert.price }} </p> <i class="fa fa-eye"
                                                                                  aria-hidden="true"></i> {{ advert.see_counter }}
-
-                            <h3>{{ advert.address }}</h3>
-                            {% if advert.owner == request.user %}
-                                <h3><a href="{% url 'advert_edit' advert.pk %}">Редактировать</a></h3>
-                            {% endif %}
-                            {% if advert.link %}
-                                <h6><a href="{{ advert.link }}">Оригинал</a></h6>
-                                {% if advert.owner == request.user %}
-                                    <h6><a href="{% url 'advert_edit' advert.pk %}">Редактировать</a></h6>
-                                {% endif %}
-
-                            {% endif %}
-
+                            <p class="advert-detail-title">Местположение:</p>
+                            <p class="advert-detail-article">{{ advert.address }}</p>
 
                         </div>
 
-                        <div class="short_overview my-5">
-                            {% if advert.phone_number %}
-                                <p>{{ advert.phone_number }}</p>
-                            {% endif %}
-                            {% if advert.owner_name %}
-                                <p>{{ advert.owner_name }}</p>
-                            {% endif %}
+                        <div class="short_overview my-5 non-indent">
+                            <p class="advert-detail-title">Количество комнат:</p>
                             {% if advert.count_room %}
-                                <p>{{ advert.count_room }}</p>
+                                <p class="advert-detail-article">{{ advert.count_room }}</p>
                             {% endif %}
+
+                            <p class="advert-detail-title">Описание:</p>
                             {% if advert.description %}
-                                <p>{{ advert.description }}</p>
+                                <p class="advert-detail-article">{{ advert.description }}</p>
                             {% endif %}
+
+                            <p class="advert-detail-title">Телефон:</p>
+                            {% if advert.phone_number %}
+                                <a href="tel:{{ advert.phone_number }}" class="advert-detail-article">{{ advert.phone_number }}</a>
+                            {% endif %}
+
+                            <p class="advert-detail-title">Имя владельца:</p>
+                            {% if advert.owner_name %}
+                                <p class="advert-detail-article">{{ advert.owner_name }}</p>
+                            {% endif %}
+                            {% if advert.link %}
+                                <h6><a href="{{ advert.link }}"  class="advert-detail-article">Оригинал</a></h6>
+                            {% endif %}
+
 
                         </div>
 
@@ -113,6 +113,12 @@
                                     закладки
                                 </button>
                             </a>
+                        {% endif %}
+                        {% if advert.owner == request.user %}
+                            <h3 class="indent"><a href="{% url 'advert_edit' advert.pk %}">
+                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Редактировать
+                                </button>    
+                            </a></h3>
                         {% endif %}
                         {#                              </form>#}
 
