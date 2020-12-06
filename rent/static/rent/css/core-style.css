@@ -406,7 +406,8 @@ a.advert-detail-article:hover {
 
 .copy-btn {
   position: relative;
-  left: calc(100% - 41% - 80px);
+  left: calc(100% - 63% - 80px);
+  top: 100%;
 }
 
 h1,

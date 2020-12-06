@@ -206,3 +206,15 @@ function sliderFunc(arrImages) {
     }
     sliderWork(arrImages);
 }
+
+//
+$(document).ready(function () {
+    var urlblock = $('#code');
+    urlblock.focus(function () {
+        urlblock.select();
+    });
+    $('#v-copy-btn').click(function () {
+        urlblock.select();
+        document.execCommand("copy");
+    });
+});
