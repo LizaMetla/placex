@@ -23,7 +23,7 @@ class CustomUserChangeForm(UserChangeForm):
         fields = ('email', 'image', 'name')
 
 class AdvertForm(ModelForm):
-    file_field = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file_field = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
     class Meta:
         model = Advert
         exclude = ['owner','is_active_admin' ]

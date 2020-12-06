@@ -1,20 +1,29 @@
 {% extends 'rent/base.html' %}
 {% block context %}
     <div class="container">
-        <h2 class="text-center center__elem-announce" id="announce-title">Добавление объявления</h2>
- 		<hr class="center__elem-announce">
-        <form action="{% if advert%}{% url 'advert_edit' advert.pk %}{% endif %}" method="post" class="announce-form" enctype="multipart/form-data">
-            <input type="text" name="city" maxlength="50" class="center-inputs form-control" placeholder="Город" required="" id="id_city" {% if advert.city %}value="{{ advert.city}}"{% endif %}>
-            <input type="text" name="address" maxlength="200" class="center-inputs form-control" placeholder="Адрес" required="" id="id_address" {% if advert.address %}value="{{ advert.address}}"{% endif %}>
-            <input type="number" name="count_room" step="any" class="center-inputs form-control" min="1" max="5" placeholder="Количество комнат" required="" id="id_count_room" {% if advert.count_room %}value="{{ advert.count_room}}"{% endif %}>
-            <input type="number" name="price" step="any" class="center-inputs form-control" placeholder="Цена" required="" id="id_price" {% if advert.price %}value="{{ advert.price}}"{% endif %}>
+        <h2 class="text-center center__elem-announce" id="announce-title">{% if advert %}Редактирование объявления{% else %}Добавление объявления{% endif %}</h2>
+        <hr class="center__elem-announce">
+        <form action="{% if advert %}{% url 'advert_edit' advert.pk %}{% endif %}" method="post" class="announce-form"
+              enctype="multipart/form-data">
+            <input type="text" name="city" maxlength="50" class="center-inputs form-control" placeholder="Город"
+                   required="" id="id_city" {% if advert.city %}value="{{ advert.city }}"{% endif %}>
+            <input type="text" name="address" maxlength="200" class="center-inputs form-control" placeholder="Адрес"
+                   required="" id="id_address" {% if advert.address %}value="{{ advert.address }}"{% endif %}>
+            <input type="number" name="count_room" step="any" class="center-inputs form-control" min="1" max="5"
+                   placeholder="Количество комнат" required="" id="id_count_room"
+                   {% if advert.count_room %}value="{{ advert.count_room }}"{% endif %}>
+            <input type="number" name="price" step="any" class="center-inputs form-control" placeholder="Цена"
+                   required="" id="id_price" {% if advert.price %}value="{{ advert.price }}"{% endif %}>
             <!-- <label for="id_is_active">Сделать видимым для всех пользователей?</label>
             <input type="checkbox" name="is_active" id="id_is_active"> -->
-            <textarea name="description" cols="40" rows="10" class="center-inputs form-control" placeholder="Описание" required="" id="id_description" >{% if advert.description %}{{ advert.description}}{% endif %}</textarea>
-            <input type="file" name="file_field" multiple="" accept="image/*" class="center-inputs form-control" required="" id="id_file_field">
+            <textarea name="description" cols="40" rows="10" class="center-inputs form-control" placeholder="Описание"
+                      required="" id="id_description">{% if advert.description %}{{ advert.description }}{% endif %}</textarea>
+            <input type="file" name="file_field" multiple="" accept="image/*" class="center-inputs form-control"
+                    {% if not advert %} required="" {% endif %} id="id_file_field">
             <input type="submit" class="center-inputs form-control submit_announce" value="Отправить">
+
             {% csrf_token %}
         </form>
     </div>
-        
+
 {% endblock %}
