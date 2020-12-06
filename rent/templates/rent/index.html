@@ -29,7 +29,8 @@
                                                             href="?page={{ page_obj.number }}&{{ querystring }}">{{ page_obj.number }}.</a>
                             </li>
                         {% else %}
-                            <li class="page-item"><a class="page-link" href="?page={{ i }}&{{ querystring }}">{{ i }}.</a></li>
+                            <li class="page-item"><a class="page-link"
+                                                     href="?page={{ i }}&{{ querystring }}">{{ i }}.</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
@@ -47,18 +48,26 @@
 
 {% block search_filter %}
     <form action="" class="filter" id="filter">
-        <label for="id_cost_min">Cost min:</label>
+        <label for="id_cost_min">Максимальная цена:</label>
         <input type="range" name="cost_min" min="0" max="5000" step="1" class="range" id="id_cost_min">
         <p id="cost_min_value"></p>
-        <label for="id_cost_max">Cost max:</label>
+        <label for="id_cost_max">Минимальная цена:</label>
         <input type="range" name="cost_max" min="0" max="5000" step="1" class="range" id="id_cost_max">
         <p id="cost_max_value"></p>
 
         {#        <div class="col-12">#}
-        <label for="id_is_owner">Is owner:</label>
-        <input type="checkbox" name="is_owner" id="id_is_owner" >
-        {#        </div>#}
+        <label for="id_is_owner">Собственник?:</label>
+        <input type="checkbox" name="is_owner" id="id_is_owner">
+
         <div class="row">
+            <div class="col">
+                <select name="sorting">
+                    <option selected="selected">Выберите Сортировку</option>
+                    <option>По убыванию цены</option>
+                    <option>По возрастанию цены</option>
+                </select>
+            </div>
+            <br><br><hr>
             <div class="col">
                 <div class="input-group">
                     <input type="submit" value="Поиск" class="form-control">
