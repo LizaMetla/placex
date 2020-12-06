@@ -328,6 +328,49 @@ i.fa-filter {
   height: 135px;
 }
 
+.advert-detail-title {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5 !important;
+}
+
+.advert-detail-article {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  font-weight: 100;
+  line-height: 1.5 !important;
+}
+
+.non-indent {
+  margin-top: 0 !important;
+}
+
+.indent {
+  margin-top: 20px;
+}
+
+h6 a.advert-detail-article {
+  font-size: 20px;
+  color: #fbb808;
+}
+
+h6 a.advert-detail-article:hover {
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: underline;
+  color: #fbb808;
+}
+
+a.advert-detail-article:hover {
+  cursor: pointer;
+  font-size: 17px;
+  text-decoration: underline;
+  color: #fbb808;
+}
+
 h1,
 h2,
 h3,
