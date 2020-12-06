@@ -87,7 +87,7 @@
         <nav class="amado-nav">
             <ul>
                 <li {% if view_name == "home" %}class="active"{% endif %} ><a href="{% url 'home' %}">Аренда</a></li>
-                <li {% if view_name == "advert_detail" %}class="active"{% endif %}><a href="advert-detail.html">Бот</a></li>
+                <li {% if view_name == "bot" %}class="active"{% endif %}><a href="{% url 'bot' %}">Бот</a></li>
                 <li {% if view_name == "favourites" %}class="active"{% endif %}><a href="{% url 'favorites' %}">Избранное</a></li>
                 {% if request.user.is_authenticated %}
                     <li {% if view_name == "profile" %}class="active"{% endif %}><a href="{% url 'profile' %}">Профиль</a></li>

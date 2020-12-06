@@ -20,7 +20,8 @@ from rent.models import Advert, Image, User
 class AbsAuthView(LoginRequiredMixin):
     login_url = reverse_lazy('login')
 
-
+class BotView(TemplateView):
+    template_name = 'rent/bot.html'
 class DefaultPageView(ListView):
     template_name = 'rent/index.html'
     paginate_by = 50
