@@ -122,14 +122,35 @@ class EditAdvertView(AbsAuthView, TemplateView):
         if advert.owner != self.request.user:
             raise Http404('У Вас нет прав для редактирования данного объявления!')
         context['advert'] = advert
+        context['images_list'] = [image.file.url for image in context['advert'].images.all()]
         return context
+
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         if context['form'].is_valid():
             description = context['form'].cleaned_data.get('description')
-            description = context['form'].cleaned_data.get('price')
-            description = context['form'].cleaned_data.get('description')
-            description = context['form'].cleaned_data.get('description')
+            price = context['form'].cleaned_data.get('price')
+            address = context['form'].cleaned_data.get('address')
+            count_room = context['form'].cleaned_data.get('count_room')
+            city = context['form'].cleaned_data.get('city')
+            advert = context.get('advert')
+            advert.description = description
+            advert.price = price
+            advert.address = address
+            advert.count_room = count_room
+            advert.city = city
+            advert.save()
+            files = request.FILES.getlist('file_field')
+            if files:
+                Image.objects.filter(advert=advert).delete()
+                for i, file in enumerate(files):
+                    image = Image.objects.create(file=file, advert=advert)
+                    if i == 0:
+                        image.is_main = True
+                    image.save()
+            return redirect('advert-detail', pk=advert.pk)
+        return render(request, self.template_name, context)
+
 
 
 
