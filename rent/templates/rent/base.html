@@ -87,8 +87,8 @@
         <nav class="amado-nav">
             <ul>
                 <li {% if view_name == "home" %}class="active"{% endif %} ><a href="{% url 'home' %}">Аренда</a></li>
-                <li {% if view_name == "bot" %}class="active"{% endif %}><a href="{% url 'bot' %}">Бот</a></li>
-                <li {% if view_name == "favourites" %}class="active"{% endif %}><a href="{% url 'favorites' %}">Избранное</a></li>
+                <li {% if view_name == "bot" %}class="active"{% endif %}><a href="#" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true{% else %}false{% endif %}, '{% url 'bot' %}', '{% url 'login'%}')">Бот</a></li>
+                <li {% if view_name == "favourites" %}class="active"{% endif %}><a href="#" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true{% else %}false{% endif %}, '{% url 'favorites' %}', '{% url 'login'%}')">Избранное</a></li>
                 {% if request.user.is_authenticated %}
                     <li {% if view_name == "profile" %}class="active"{% endif %}><a href="{% url 'profile' %}">Профиль</a></li>
                 {% endif %}
@@ -98,7 +98,7 @@
         </nav>
         <!-- Button Group -->
         <div class="amado-btn-group mt-30 mb-100">
-            <a href="#" class="btn amado-btn mb-15" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true{% else %}false{% endif %}, '{% url 'advert_add' %}')"><i class="fa fa-plus" aria-hidden="true"></i> Объявление</a>
+            <a href="#" class="btn amado-btn mb-15" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true{% else %}false{% endif %}, '{% url 'advert_add' %}', '{% url 'login'%}')"><i class="fa fa-plus" aria-hidden="true"></i> Объявление</a>
             <!-- <a href="#" class="btn amado-btn active">New this week</a> -->
         </div>
         <!-- Cart Menu -->

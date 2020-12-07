@@ -109,7 +109,7 @@
                             </a>
                         {% else %}
 {#                            <a href="">#}
-                                <button type="submit" name="addtocart" value="5" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true, '{% url 'add-to-favorite' advert.pk %}?next={% url 'advert-detail' advert.pk %}'{% else %}false, '{% url 'advert-detail' advert.pk %}'{% endif %})" class="btn amado-btn">Добавить в
+                                <button type="submit" name="addtocart" value="5" onclick="autorisationInAddingAnnounce({% if request.user.is_authenticated %}true, '{% url 'add-to-favorite' advert.pk %}?next={% url 'advert-detail' advert.pk %}'{% else %}false, '{% url 'advert-detail' advert.pk %}'{% endif %}, '{% url 'login' %}')" class="btn amado-btn">Добавить в
                                     закладки
                                 </button>
 {#                            </a>#}

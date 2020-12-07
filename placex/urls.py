@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('core-admin/', admin.site.urls),
     path('', include('rent.urls')),
 path('bot-polling/', include('django_telegrambot.urls')),
 ]

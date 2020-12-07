@@ -83,12 +83,6 @@ class AdvertDetailView(DetailView):
         return context
 
 
-class MyAdvertsView(TemplateView):
-    template_name = ...
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
-
 
 class CustomLoginView(TemplateView):
     template_name = 'rent/login.html'

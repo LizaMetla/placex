@@ -94,9 +94,9 @@ function previewFile(input){
 // open modal window if user not autorised (add announcement)
 const logInForm = document.querySelector('#log-in-form');
 
-function autorisationInAddingAnnounce(autorisation, url) {
+function autorisationInAddingAnnounce(autorisation, url, baseUrl) {
     if (!autorisation) {
-        logInForm.action = `${logInForm.action}?next=${url}`;
+        logInForm.action = `${baseUrl}?next=${url}`;
         formContainer.classList.remove('close');
         logInWindow.classList.remove('close');
     } else {

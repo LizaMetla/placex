@@ -14,15 +14,9 @@ class AdvertAdmin(admin.ModelAdmin):
     list_display = ('address', 'price', 'link')
     search_fields = ('address', 'link')
 
-admin.site.register(Image)
-
-
-
-# class CustomUserAdmin(UserAdmin):
-#     add_form = CustomUserCreationForm
-#     form = CustomUserChangeForm
-#     model = User
-#     list_display = ['email', 'username', 'chat_id', 'name', 'is_active']
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    pass
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
