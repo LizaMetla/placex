@@ -106,6 +106,7 @@ def site_parser(bot, chat_id, message='', rooms=[]):
 
                 advert.save()
                 message_ = f'{advert.link} \n {advert.price} \n Адрес: {advert.address or "Не указан"}'
+                user = User.objects.get(pk=user.pk)
                 if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
                     bot.sendPhoto(chat_id, photo=advert.images.all().first().file)
                     bot.sendMessage(chat_id, text=message_)

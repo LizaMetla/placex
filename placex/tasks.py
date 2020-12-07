@@ -35,7 +35,7 @@ def update_rooms():
                 site_parser(bot, user.chat_id, rooms=rooms)
 
 @periodic_task(run_every=(crontab(minute='*/1')), name='check_new_users')
-def update_rooms():
+def check_new_users():
     setting = Settings.objects.all().first()
     if setting is None:
         setting = Settings.objects.create()
