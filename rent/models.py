@@ -102,7 +102,20 @@ class Advert(models.Model):
         if not image:
             image = self.images.all().first()
         return image
-
+    def get_tel_number(self):
+        if self.phone_number:
+            return self.phone_number
+        elif self.owner and self.owner.phone_number:
+            return self.owner.phone_number
+        else:
+            return None
+    def get_owner_name(self):
+        if self.owner_name:
+            return self.phone_number
+        elif self.owner and self.owner.name:
+            return self.owner.name
+        else:
+            return None
 
 class Settings(models.Model):
     is_sent = models.BooleanField(default=True)

@@ -75,13 +75,13 @@
                             {% endif %}
 
                             <p class="advert-detail-title">Телефон:</p>
-                            {% if advert.phone_number %}
-                                <a href="tel:{{ advert.phone_number }}" class="advert-detail-article">{{ advert.phone_number }}</a>
+                            {% if advert.get_tel_number %}
+                                <a href="tel:{{ advert.get_tel_number }}" class="advert-detail-article">{{ advert.get_tel_number }}</a>
                             {% endif %}
 
                             <p class="advert-detail-title">Имя владельца:</p>
-                            {% if advert.owner_name %}
-                                <p class="advert-detail-article">{{ advert.owner_name }}</p>
+                            {% if advert.get_owner_name %}
+                                <p class="advert-detail-article">{{ advert.get_owner_name }}</p>
                             {% endif %}
                             {% if advert.link %}
                                 <h6><a href="{{ advert.link }}"  class="advert-detail-article">Оригинал</a></h6>
