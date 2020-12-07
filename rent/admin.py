@@ -28,7 +28,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('email', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
         ('Fields', {'fields': ('chat_id', 'name', 'price_max', 'price_min', 'phone_number', 'is_agent', 'favorites', 'image', 'is_send',
-                               'is_kufar', 'is_onliner', 'is_hata')}),
+                               'is_kufar', 'is_onliner', 'is_hata', 'is_new')}),
     )
     add_fieldsets = (
         (None, {

@@ -20,7 +20,10 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('email', 'image', 'name')
+        fields = '__all__'
+        field_classes = {'email': forms.EmailField}
+
+
 
 class AdvertForm(ModelForm):
     file_field = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)

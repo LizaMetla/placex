@@ -5,6 +5,8 @@ from django.core.validators import validate_email
 from django_telegrambot.apps import DjangoTelegramBot
 from telegram.ext import CommandHandler, MessageHandler, Filters
 
+from placex.settings import SEARCH_KEYS
+from placex.utils import get_keys_from_message, set_keys_on_user
 from rent.models import User
 from placex.settings_common import PARSERS, ADMIN_EMAILS
 
@@ -94,6 +96,9 @@ def echo(bot, context):
         if search_res:
             context.bot.send_message(chat_id, text=f'{user.name}, спасибо, что связали бота с профилем placex.\nТеперь Вы можете выполнить настройку бота через /help или из профиля placex')
         else:
+            search_values = get_keys_from_message(bot.message.text.lower(), SEARCH_KEYS)
+            user = User.objects.get(chat_id=chat_id)
+            set_keys_on_user(user, search_values)
             context.bot.send_message(chat_id, text=bot.message.text)
 
 

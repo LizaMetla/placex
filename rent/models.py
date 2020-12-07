@@ -43,6 +43,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
+    email = models.EmailField(_('email address'), unique=True)
     name = models.CharField(verbose_name='ФИО', max_length=50, null=True, blank=True)
     price_max = models.IntegerField(verbose_name='Максимальная цена', default=500, blank=True)
     price_min = models.IntegerField(verbose_name='Минимальная цена', default=0, blank=True)
@@ -51,20 +52,20 @@ class User(AbstractUser):
     favorites = models.ManyToManyField('Advert', blank=True)
     image = models.ImageField(null=True, blank=True)
     is_send = models.BooleanField(default=True, blank=True)
+    is_new = models.BooleanField(default=False, blank=True)
     is_kufar = models.BooleanField(default=False, blank=True)
     is_onliner = models.BooleanField(default=True, blank=True)
     is_hata = models.BooleanField(default=False, blank=True)
     chat_id = models.CharField(max_length=50, blank=True, null=True)
     attachment_code = models.CharField(max_length=50, blank=True, null=True)
     username = None
-    email = models.EmailField(_('email address'), unique=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
-    def get_username(self):
+    def get_custom_username(self):
         if self.name:
             return self.name
         elif self.email:
