@@ -30,5 +30,9 @@ phone.onkeydown = function() {
      if (curLen > 18)
     	phone.value = phone.value.substring(0, phone.value.length - 1);
       
+    if (curLen !== 19) {
+      phone.setCustomValidity('Номер телефона введен неверно! Пожалуйста, повторите ввод.');
+    }
+
      old++;
 }
