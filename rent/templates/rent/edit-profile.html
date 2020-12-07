@@ -10,9 +10,9 @@
         {% static 'rent/img/core-img/plusman.png' %}
     {% endif %}
 {% endblock %}
-{% block profile_username %}{{ request.user.email }}
+{% block profile_username %}{% if request.user.email %}{{ request.user.email }}{% endif %}
 {% endblock %}
-{% block profile_name %}{{ request.user.name }}
+{% block profile_name %}{% if request.user.name %}{{ request.user.name }}{% endif %}
 {% endblock %}
 {% block profile_password %}
 {% endblock %}

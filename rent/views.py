@@ -39,7 +39,7 @@ class BotView(AbsAuthView, TemplateView):
 
 class DefaultPageView(ListView):
     template_name = 'rent/index.html'
-    paginate_by = 50
+    paginate_by = 51
     context_object_name = 'adverts_list'
 
     def get_queryset(self):
@@ -58,7 +58,7 @@ class DefaultPageView(ListView):
             return Advert.objects.filter(query).order_by('-price' )
         elif sorting == 'По возрастанию цены':
             return Advert.objects.filter(query).order_by('price' )
-        return Advert.objects.filter(query)
+        return Advert.objects.filter(query).order_by('-date_advert')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -261,7 +261,7 @@ class FavoritesView(AbsAuthView, ListView):
 
 class ProfileView(AbsAuthView, ListView):
     template_name = 'rent/profile.html'
-    paginate_by = 3
+    paginate_by = 9
     context_object_name = 'adverts_list'
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
