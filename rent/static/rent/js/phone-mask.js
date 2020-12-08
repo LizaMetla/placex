@@ -2,12 +2,6 @@
 var phone = document.querySelector('#phone');
 
 if (phone) {
-  phone.addEventListener('click', () => {
-    if (phone.value === '') {
-      phone.value = "+375 (";
-    }
-  });
-  
   phone.addEventListener('focus', () => {
     if (phone.value === '') {
       phone.value = "+375 (";
@@ -17,14 +11,13 @@ if (phone) {
   var old = 0;
   
   phone.addEventListener('keyup', (e) => {
+    var curLen = phone.value.length;
     if (e.code !== 'Backspace' && e.code !== 'Delete') {
-      var curLen = phone.value.length;
-      
       if (curLen < old){
         old--;
         return;
       }
-      
+      console.log(phone.value)
       if (curLen == 4) 
         phone.value = phone.value + " (";
         
@@ -39,15 +32,14 @@ if (phone) {
         
       if (curLen > 19)
         phone.value = phone.value.substring(0, 19);
-  
-      if (phone.value.length !== 19) {
-        console.log(phone.value.length)
-        phone.setCustomValidity('Номер телефона введен неверно! Пожалуйста, повторите ввод.');
-      } else {
-        phone.setCustomValidity('');
-      }
 
        old++;
+    }
+
+    if (curLen !== 19) {
+      phone.setCustomValidity('Номер телефона введен неверно! Пожалуйста, повторите ввод.');
+    } else {
+      phone.setCustomValidity('');
     }
   });
 }
