@@ -111,7 +111,7 @@ class Advert(models.Model):
             return None
     def get_owner_name(self):
         if self.owner_name:
-            return self.phone_number
+            return self.owner_name
         elif self.owner and self.owner.name:
             return self.owner.name
         else:
