@@ -17,7 +17,7 @@ if (phone) {
         old--;
         return;
       }
-      console.log(phone.value)
+
       if (curLen == 4) 
         phone.value = phone.value + " (";
         
