@@ -4,6 +4,7 @@ from rent.models import Advert
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
+
 class CustomUserAuthForm(forms.Form):
     email = forms.EmailField(required=True)
     password = forms.CharField(max_length=100)

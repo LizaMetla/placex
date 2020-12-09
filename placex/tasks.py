@@ -28,13 +28,21 @@ def update_rooms():
             print(f'error while parsing {traceback.format_exc()}')
             rooms = []
         print('is_sent')
+        new_rooms = site_parser(rooms=rooms)
+        bot = DjangoTelegramBot.get_bot()
         for user in User.objects.filter(chat_id__isnull=False, is_send=True, email__isnull=False):
-            if user.is_send and user.email:
-                print('bot access ')
-                bot = DjangoTelegramBot.get_bot()
-                site_parser(bot, user.chat_id, rooms=rooms)
+            print('bot access ')
+            for advert in new_rooms:
+                message_ = f'{advert.link} \n {advert.price} \n Адрес: {advert.address or "Не указан"}'
+                user = User.objects.get(pk=user.pk)
+                if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
+                    bot.sendPhoto(user.chat_id, photo=advert.images.all().first().file)
+                    bot.sendMessage(user.chat_id, text=message_)
 
-@periodic_task(run_every=(crontab(minute='*/1')), name='check_new_users')
+
+
+
+@periodic_task(run_every=(crontab(minute='*/2')), name='check_new_users')
 def check_new_users():
     setting = Settings.objects.all().first()
     if setting is None:

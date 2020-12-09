@@ -19,7 +19,7 @@ from rent.models import Advert, Image, User
 
 
 class AbsAuthView(LoginRequiredMixin):
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('registration')
 
 class BotView(AbsAuthView, TemplateView):
     template_name = 'rent/bot.html'
@@ -37,7 +37,7 @@ class BotView(AbsAuthView, TemplateView):
         context['attachment_code'] = full_attachment_code
         return context
 
-class DefaultPageView(ListView):
+class IndexPageView(ListView):
     template_name = 'rent/index.html'
     paginate_by = 51
     context_object_name = 'adverts_list'
@@ -46,13 +46,13 @@ class DefaultPageView(ListView):
         query = Q()
         cost_min = self.request.GET.get('cost_min')
         if cost_min and cost_min.isdigit():
-            query &= Q(price__gte=cost_min)
+            query &= Q(price__gte=cost_min) # формирование запроса для фильтрации объявлений в БД
         cost_max = self.request.GET.get('cost_max')
         if cost_max and cost_max.isdigit():
             query &= Q(price__lte=cost_max)
         is_owner = self.request.GET.get('is_owner')
         if is_owner and is_owner == 'on':
-            query &= ~Q(owner__is_agent=True)
+            query &= ~Q(owner__is_agent=True) & ~Q(is_agent=True)
         sorting = self.request.GET.get('sorting')
         if sorting == 'По убыванию цены':
             return Advert.objects.filter(query).order_by('-price' )
@@ -85,7 +85,7 @@ class AdvertDetailView(DetailView):
 
 
 class CustomLoginView(TemplateView):
-    template_name = 'rent/login.html'
+    template_name = 'rent/registration.html'
     authentication_form = CustomUserAuthForm
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -94,6 +94,7 @@ class CustomLoginView(TemplateView):
         context['registration_form'] = CustomUserCreationForm(self.request.POST or None)
         context['view_name'] = 'login'
         return context
+
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
         if context['form'].is_valid():
@@ -110,16 +111,25 @@ class CustomLoginView(TemplateView):
                 self.request.session.save()
                 self.request.session['is_error'] = True
                 self.request.session.save()
+                next = self.request.GET.get('next')
+                if next in ('/bot/', '/favorites/'):
+                    return redirect('home')
+            next = self.request.GET.get('next')
+            if next:
+                return HttpResponseRedirect(next)
+            return redirect('home')
 
-            next = self.request.GET.get('next')
-            if next:
-                return HttpResponseRedirect(next)
-            return redirect('home')
         else:
+            self.request.session.save()
+            self.request.session['is_error'] = True
+            self.request.session.save()
             next = self.request.GET.get('next')
+            if next in ('/bot/', '/favorites/'):
+                return redirect('home')
             if next:
                 return HttpResponseRedirect(next)
             return redirect('home')
+
 
 
 
@@ -137,7 +147,6 @@ class EditAdvertView(AbsAuthView, TemplateView):
         if advert.owner != self.request.user:
             raise Http404('У Вас нет прав для редактирования данного объявления!')
         context['advert'] = advert
-        context['images_list'] = [image.file.url for image in context['advert'].images.all()]
         return context
 
     def post(self, request, *args, **kwargs):
@@ -195,7 +204,7 @@ class AddAdvertView(AbsAuthView, TemplateView):
 
 
 class RegistrationView(TemplateView):
-    template_name = 'rent/login.html'
+    template_name = 'rent/registration.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

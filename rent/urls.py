@@ -4,7 +4,7 @@ from django.urls import path
 from rent.views import *
 
 urlpatterns = [
-    path('', DefaultPageView.as_view(), name='home'),
+    path('', IndexPageView.as_view(), name='home'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('favorites/', FavoritesView.as_view(), name='favorites'),
     path('login/', CustomLoginView.as_view(), name='login'),

@@ -13,7 +13,7 @@ from rent.models import Advert
 def get_first_or_none(obj_list: list):
     return obj_list[0] if obj_list else None
 def get_all_onliner_rooms() -> list:
-    params = f"price%5Bmin%5D=1&price%5Bmax%5D=1000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
+    params = f"price%5Bmin%5D=1&price%5Bmax%5D=3000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
     response = requests.get(
         f"https://ak.api.onliner.by/search/apartments?{params}&bounds%5Blb%5D%5Blat%5D=53.8284204609269&bounds%5Blb%5D%5Blong%5D=27.440757751464847&bounds%5Brt%5D%5Blat%5D=53.96800258730025&bounds%5Brt%5D%5Blong%5D=27.683486938476566")
     rooms = json.loads(response.content.decode('UTF-8')).get('apartments')
@@ -146,4 +146,4 @@ def get_all_hata_rooms() -> list:
         print(room)
         rooms_list.append(room)
 
-    return rooms_list
+    return  rooms_list

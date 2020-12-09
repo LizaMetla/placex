@@ -18,7 +18,9 @@ logger = logging.getLogger(__name__)
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, context):
     chat_id = bot.message.chat.id
-    user, _ = User.objects.get_or_create(chat_id=chat_id)
+    user, created = User.objects.get_or_create(chat_id=chat_id)
+    if created:
+        user.is_new = True
     user.name = bot.message.chat.first_name or 'Неопознанный' + '' + bot.message.chat.last_name or 'клиент'
     user.save()
     if not user.is_send:
@@ -36,8 +38,8 @@ def _help(bot, context):
     message = 'Этот бот позволяет искать объявления об аренде квартир/комнат и слать уведомления о новых ' \
               'объявлениях. \n' \
               'Введите следуюшие свойства квартиры: \n' \
-              'max=< Максимальная цена в USD, по умолчанию 300$ > \n ' \
-              'min=< Минимальная цена в USD, по умолчанию 100$ > \n'
+              'max=< Максимальная цена в USD, по умолчанию 500$ > \n ' \
+              'min=< Минимальная цена в USD, по умолчанию 0$ > \n'
     context.bot.send_message(chat_id, text=message)
 
 
@@ -45,8 +47,11 @@ def echo(bot, context):
     # logger.info(str(dir(context.update)))
     chat_id = bot.message.chat.id
 
-    user, _ = User.objects.get_or_create(chat_id=chat_id)
-    user.name = bot.message.chat.first_name or 'Неопознанный' + '' + bot.message.chat.last_name or 'клиент'
+    user, created = User.objects.get_or_create(chat_id=chat_id)
+    if created:
+        user.is_new = True
+    if not user.name:
+        user.name = bot.message.chat.first_name or 'Неопознанный' + '' + bot.message.chat.last_name or 'клиент'
     user.save()
     is_permissions = True
     search_res = re.search(r'<placex>.+</placex>', bot.message.text)
@@ -56,6 +61,8 @@ def echo(bot, context):
         user_in_site = User.objects.filter(attachment_code=code).first()
         if user_in_site and user_in_site!=user:
             user_in_site.chat_id = user.chat_id
+            user_in_site.price_max = user.price_max
+            user_in_site.price_min = user.price_min
             user_in_site.is_send = user.is_send
             user_in_site.is_onliner = user.is_onliner
             user_in_site.is_kufar = user.is_kufar
