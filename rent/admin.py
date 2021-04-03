@@ -22,7 +22,7 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ('email', 'chat_id', 'name', 'is_active')
+    list_display = ('email', 'chat_id', 'name', 'is_active', 'username')
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

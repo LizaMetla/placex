@@ -64,7 +64,6 @@ def site_parser(bot=None, chat_id=None, message='', rooms=[]):
     new_rooms = []
     for room in rooms:
         room_link = room.get('link')
-        print(room)
         advert = Advert.objects.filter(link=room_link).first()
         if advert:
             advert.date_advert = room.get('date_advert')

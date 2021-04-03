@@ -13,48 +13,47 @@ from rent.models import Advert
 def get_first_or_none(obj_list: list):
     return obj_list[0] if obj_list else None
 def get_all_onliner_rooms() -> list:
-    params = f"price%5Bmin%5D=1&price%5Bmax%5D=3000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
-    response = requests.get(
-        f"https://ak.api.onliner.by/search/apartments?{params}&bounds%5Blb%5D%5Blat%5D=53.8284204609269&bounds%5Blb%5D%5Blong%5D=27.440757751464847&bounds%5Brt%5D%5Blat%5D=53.96800258730025&bounds%5Brt%5D%5Blong%5D=27.683486938476566")
-    rooms = json.loads(response.content.decode('UTF-8')).get('apartments')
-    rooms_list = []
-    for room in rooms:
-        try:
-            date_advert = parse(room.get('last_time_up')).date()
-        except:
-            date_advert = date.today()
-        if Advert.objects.filter(link=room.get('url'), date_advert=date_advert).exists():
-            continue
-        address = room.get('location', dict()).get('address')
-        print(room)
-        room_page = requests.get(room.get('url')).text
-        time.sleep(1)
-        images_urls = []
-        description = ''
-        count_room = room.get('rent_type')
-        count_room = {'1_room': 1,
-         '2_rooms': 2,
-         '3_rooms': 3,
-         '4_rooms': 4}.get(count_room, 1)
-        phone_number = ''
-        name = 'Неопознанный олень'
-        try:
-            images_objs = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-cover__thumbnail')
-            name = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended')[0].text.replace('\n', '').replace(' ', '')
-            description = get_first_or_none(BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended-bottom')).text
-            phone_number = BeautifulSoup(room_page, "html.parser").find_all('ul', class_='apartment-info__list apartment-info__list_phones')[0].find_all('li', class_='apartment-info__item apartment-info__item_secondary')[0].text.replace('\n', '')
-            if description:
-                description = ' '.join(description.split())
-            for images_obj in images_objs:
-                image_url = re.search(r"(?:\(['\"]?)(.*?)(?:['\"]?\))", images_obj.attrs.get('style')).group(1)
-                if image_url and image_url!=room.get('photo'):
-                    print(image_url)
-                    images_urls.append(image_url)
-        except:
-            pass
-        rooms_list.append(
-            {'link': room.get('url'), 'image': room.get('photo'), 'price': float(room.get('price').get('amount')),
-             'address': address, 'owner_name':name, 'date_advert':date_advert, 'images': images_urls, 'description': description,'phone_number':phone_number, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
+    with requests.Session() as s:
+        params = f"price%5Bmin%5D=1&price%5Bmax%5D=3000&currency=usd&rent_type%5B%5D=1_room&rent_type%5B%5D=2_rooms&rent_type%5B%5D=3_rooms&rent_type%5B%5D=4_rooms&rent_type%5B%5D=5_rooms&rent_type%5B%5D=6_rooms"
+        response = s.get(
+            f"https://ak.api.onliner.by/search/apartments?{params}&bounds%5Blb%5D%5Blat%5D=53.8284204609269&bounds%5Blb%5D%5Blong%5D=27.440757751464847&bounds%5Brt%5D%5Blat%5D=53.96800258730025&bounds%5Brt%5D%5Blong%5D=27.683486938476566")
+        rooms = json.loads(response.content.decode('UTF-8')).get('apartments')
+        rooms_list = []
+        for room in rooms:
+            try:
+                date_advert = parse(room.get('last_time_up')).date()
+            except:
+                date_advert = date.today()
+            if Advert.objects.filter(link=room.get('url'), date_advert=date_advert).exists():
+                continue
+            address = room.get('location', dict()).get('address')
+            room_page = s.get(room.get('url')).text
+            time.sleep(2)
+            images_urls = []
+            description = ''
+            count_room = room.get('rent_type')
+            count_room = {'1_room': 1,
+             '2_rooms': 2,
+             '3_rooms': 3,
+             '4_rooms': 4}.get(count_room, 1)
+            phone_number = ''
+            name = 'Неопознанный олень'
+            try:
+                images_objs = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-cover__thumbnail')
+                name = BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended')[0].text.replace('\n', '').replace(' ', '')
+                description = get_first_or_none(BeautifulSoup(room_page, "html.parser").find_all('div', class_='apartment-info__sub-line apartment-info__sub-line_extended-bottom')).text
+                phone_number = BeautifulSoup(room_page, "html.parser").find_all('ul', class_='apartment-info__list apartment-info__list_phones')[0].find_all('li', class_='apartment-info__item apartment-info__item_secondary')[0].text.replace('\n', '')
+                if description:
+                    description = ' '.join(description.split())
+                for images_obj in images_objs:
+                    image_url = re.search(r"(?:\(['\"]?)(.*?)(?:['\"]?\))", images_obj.attrs.get('style')).group(1)
+                    if image_url and image_url!=room.get('photo'):
+                        images_urls.append(image_url)
+            except:
+                pass
+            rooms_list.append(
+                {'link': room.get('url'), 'image': room.get('photo'), 'price': float(room.get('price').get('amount')),
+                 'address': address, 'owner_name':name, 'date_advert':date_advert, 'images': images_urls, 'description': description,'phone_number':phone_number, 'is_agent': not room.get('contact').get('owner'), 'count_room':count_room})
     return rooms_list
 
 

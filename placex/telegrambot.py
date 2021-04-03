@@ -117,6 +117,7 @@ def stop(bot, context):
     chat_id = bot.message.chat.id
     user = User.objects.get(chat_id=chat_id)
     user.is_send = False
+    user.is_new = True
     user.save()
     message = 'Вы отписались от обновлений, для возобновления нашего общения введите /start'
     context.bot.send_message(chat_id, text=message)

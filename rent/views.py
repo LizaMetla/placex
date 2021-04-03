@@ -9,20 +9,23 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 
 from django.views.generic import TemplateView, DetailView, ListView
 
 from rent.forms import AdvertForm, CustomUserCreationForm, SearchForm, CustomUserChangeForm, CustomUserAuthForm
 from rent.models import Advert, Image, User
+from placex.tasks import send_site_room
 
 
 class AbsAuthView(LoginRequiredMixin):
     login_url = reverse_lazy('registration')
 
+
 class BotView(AbsAuthView, TemplateView):
     template_name = 'rent/bot.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['view_name'] = 'bot'
@@ -37,6 +40,7 @@ class BotView(AbsAuthView, TemplateView):
         context['attachment_code'] = full_attachment_code
         return context
 
+
 class IndexPageView(ListView):
     template_name = 'rent/index.html'
     paginate_by = 51
@@ -46,7 +50,7 @@ class IndexPageView(ListView):
         query = Q()
         cost_min = self.request.GET.get('cost_min')
         if cost_min and cost_min.isdigit():
-            query &= Q(price__gte=cost_min) # формирование запроса для фильтрации объявлений в БД
+            query &= Q(price__gte=cost_min)  # формирование запроса для фильтрации объявлений в БД
         cost_max = self.request.GET.get('cost_max')
         if cost_max and cost_max.isdigit():
             query &= Q(price__lte=cost_max)
@@ -55,9 +59,9 @@ class IndexPageView(ListView):
             query &= ~Q(owner__is_agent=True) & ~Q(is_agent=True)
         sorting = self.request.GET.get('sorting')
         if sorting == 'По убыванию цены':
-            return Advert.objects.filter(query).order_by('-price' )
+            return Advert.objects.filter(query).order_by('-price')
         elif sorting == 'По возрастанию цены':
-            return Advert.objects.filter(query).order_by('price' )
+            return Advert.objects.filter(query).order_by('price')
         return Advert.objects.filter(query).order_by('-date_advert')
 
     def get_context_data(self, *args, **kwargs):
@@ -83,10 +87,10 @@ class AdvertDetailView(DetailView):
         return context
 
 
-
 class CustomLoginView(TemplateView):
     template_name = 'rent/registration.html'
     authentication_form = CustomUserAuthForm
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         register_data = self.request.POST.copy()
@@ -131,15 +135,15 @@ class CustomLoginView(TemplateView):
             return redirect('home')
 
 
-
-
 class RegisterView(View):
     def post(self, request, *args, **kwargs):
         return redirect('home')
     # def get_context_data(self, **kwargs):
 
+
 class EditAdvertView(AbsAuthView, TemplateView):
     template_name = 'rent/add-advert.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = AdvertForm(self.request.POST or None, self.request.FILES)
@@ -176,8 +180,6 @@ class EditAdvertView(AbsAuthView, TemplateView):
         return render(request, self.template_name, context)
 
 
-
-
 class AddAdvertView(AbsAuthView, TemplateView):
     template_name = 'rent/add-advert.html'
 
@@ -192,6 +194,8 @@ class AddAdvertView(AbsAuthView, TemplateView):
             advert = context['form'].save()
             advert.owner = request.user
             advert.is_agent = request.user.is_agent
+            advert.link = ("https" if self.request.is_secure() else "http") + '://' + self.request.get_host() + reverse(
+                'advert-detail', kwargs={'pk': advert.pk})
             advert.save()
             files = request.FILES.getlist('file_field')
             for i, file in enumerate(files):
@@ -199,6 +203,7 @@ class AddAdvertView(AbsAuthView, TemplateView):
                 if i == 0:
                     image.is_main = True
                 image.save()
+            send_site_room.delay(advert.pk)
             return redirect('advert-detail', advert.pk)
         return render(request, self.template_name, context)
 
@@ -234,6 +239,7 @@ class AddToFavoriteView(AbsAuthView, View):
         else:
             return redirect('home')
 
+
 class RemoveFromFavoriteView(AbsAuthView, View):
     def get(self, request, *args, **kwargs):
         advert = get_object_or_404(Advert, pk=kwargs.get('pk'))
@@ -245,15 +251,18 @@ class RemoveFromFavoriteView(AbsAuthView, View):
         else:
             return redirect('home')
 
+
 class FavoritesView(AbsAuthView, ListView):
     template_name = 'rent/favourites.html'
     paginate_by = 21
     context_object_name = 'adverts_list'
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['view_name'] = 'favourites'
 
         return context
+
     def get_queryset(self):
         query = Q()
         cost_min = self.request.GET.get('cost_min')
@@ -272,15 +281,19 @@ class ProfileView(AbsAuthView, ListView):
     template_name = 'rent/profile.html'
     paginate_by = 9
     context_object_name = 'adverts_list'
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['view_name'] = 'profile'
         return context
+
     def get_queryset(self):
         return Advert.objects.filter(owner=self.request.user)
 
+
 class EditProfileView(AbsAuthView, TemplateView):
     template_name = 'rent/edit-profile.html'
+
     def post(self, request, *args, **kwargs):
         name = self.request.POST.get('name')
         phone = self.request.POST.get('phone_number')
@@ -291,7 +304,7 @@ class EditProfileView(AbsAuthView, TemplateView):
             self.request.user.is_agent = True
         if is_agent is None:
             self.request.user.is_agent = False
-        if User.objects.filter(~Q(email=self.request.user.email),email=email).exists():
+        if User.objects.filter(~Q(email=self.request.user.email), email=email).exists():
             return render(request, self.template_name, context={})
         self.request.user.name = name
         self.request.user.email = email
@@ -300,4 +313,3 @@ class EditProfileView(AbsAuthView, TemplateView):
             self.request.user.image = image
         self.request.user.save()
         return redirect('profile')
-

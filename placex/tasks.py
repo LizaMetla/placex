@@ -5,6 +5,7 @@ import os
 import traceback
 
 import requests
+from celery import shared_task
 from celery.schedules import crontab
 from celery.task import periodic_task
 from django.db.models import Q
@@ -40,6 +41,23 @@ def update_rooms():
                     bot.sendMessage(user.chat_id, text=message_)
 
 
+@shared_task(name="tasks.send_site_room")
+def send_site_room(room_id):
+    setting = Settings.objects.all().first()
+    if setting is None:
+        setting = Settings.objects.create()
+    print('pre_sent')
+    if setting.is_sent:
+        advert = Advert.objects.filter(pk=room_id).first()
+        if not advert:
+            return None
+        bot = DjangoTelegramBot.get_bot()
+        for user in User.objects.filter(chat_id__isnull=False, is_send=True, email__isnull=False):
+            message_ = f'{advert.link}\n{advert.price} \nАдрес: {advert.address or "Не указан"}'
+            user = User.objects.get(pk=user.pk)
+            if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
+                bot.sendPhoto(user.chat_id, photo=advert.images.all().first().file)
+                bot.sendMessage(user.chat_id, text=message_)
 
 
 @periodic_task(run_every=(crontab(minute='*/2')), name='check_new_users')
@@ -59,9 +77,13 @@ def check_new_users():
             user.is_new = False
             user.save()
 
+
 @periodic_task(run_every=(crontab(minute='*/59')), name='delete_rooms')
 def delete_old_rooms():
-    for room in Advert.objects.filter(~Q(link=''), link__isnull=False):
-        response = requests.get(room.link)
-        if response.status_code == 404:
-            room.delete()
+    with requests.Session() as s:
+        for room in Advert.objects.filter(~Q(link=''), link__isnull=False):
+            if 'localhost' in room.link:
+                continue
+            response = s.get(room.link)
+            if response.status_code == 404:
+                room.delete()
