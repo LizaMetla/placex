@@ -92,6 +92,7 @@
                 {% if request.user.is_authenticated %}
                     <li {% if view_name == "profile" %}class="active"{% endif %}><a href="{% url 'profile' %}">Профиль</a></li>
                 {% endif %}
+                    <li {% if view_name == "documents" %}class="active"{% endif %}><a href="{% url 'documents' %}">Документы</a></li>
                 <!-- <li><a href="cart.html">Cart</a></li>
                 <li><a href="checkout.html">Checkout</a></li> -->
             </ul>

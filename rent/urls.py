@@ -9,6 +9,7 @@ urlpatterns = [
     path('favorites/', FavoritesView.as_view(), name='favorites'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('registration/', RegistrationView.as_view(), name='registration'),
+    path('documents/', DocumentsView.as_view(), name='documents'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('advert/add/', AddAdvertView.as_view(), name='advert_add'),
     path('advert/edit/<int:pk>/', EditAdvertView.as_view(), name='advert_edit'),

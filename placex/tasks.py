@@ -13,10 +13,10 @@ from django_telegrambot.apps import DjangoTelegramBot
 
 from rent.models import Advert, Settings
 from rent.models import User
-from placex.utils import site_parser, get_rooms_for_user
+from placex.utils import site_parser, get_rooms
 
-
-@periodic_task(run_every=(crontab(minute='*/20')), name='update_rooms')
+#туть ставим 2 минутки
+@periodic_task(run_every=(crontab(minute='*/10')), name='update_rooms')
 def update_rooms():
     setting = Settings.objects.all().first()
     if setting is None:
@@ -24,7 +24,7 @@ def update_rooms():
     print('pre_sent')
     if setting.is_sent:
         try:
-            rooms = get_rooms_for_user()
+            rooms = get_rooms()
         except:
             print(f'error while parsing {traceback.format_exc()}')
             rooms = []
@@ -36,7 +36,7 @@ def update_rooms():
             for advert in new_rooms:
                 message_ = f'{advert.link} \n {advert.price} \n Адрес: {advert.address or "Не указан"}'
                 user = User.objects.get(pk=user.pk)
-                if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
+                if (user.price_min or 0) <= float(advert.price) <= (user.price_max or 500):
                     bot.sendPhoto(user.chat_id, photo=advert.images.all().first().file)
                     bot.sendMessage(user.chat_id, text=message_)
 
@@ -55,7 +55,7 @@ def send_site_room(room_id):
         for user in User.objects.filter(chat_id__isnull=False, is_send=True, email__isnull=False):
             message_ = f'{advert.link}\n{advert.price} \nАдрес: {advert.address or "Не указан"}'
             user = User.objects.get(pk=user.pk)
-            if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
+            if (user.price_min or 0) <= float(advert.price) <= (user.price_max or 500):
                 bot.sendPhoto(user.chat_id, photo=advert.images.all().first().file)
                 bot.sendMessage(user.chat_id, text=message_)
 
@@ -69,11 +69,10 @@ def check_new_users():
         if user.is_send and user.email:
             print('bot access ')
             bot = DjangoTelegramBot.get_bot()
-            for advert in Advert.objects.all().order_by('-date_advert')[:15]:
+            for advert in Advert.objects.filter(price__gte=(user.price_min or 0), price__lte=(user.price_max or 500)).order_by('-date_advert')[:15]:
                 message_ = f'{advert.link} \n {advert.price} \n Адрес: {advert.address or "Не указан"}'
-                if user.price_min or 0 <= float(advert.price) <= user.price_max or 500:
-                    bot.sendPhoto(user.chat_id, photo=advert.images.all().order_by('is_main').last().file)
-                    bot.sendMessage(user.chat_id, text=message_)
+                bot.sendPhoto(user.chat_id, photo=advert.images.all().order_by('is_main').last().file)
+                bot.sendMessage(user.chat_id, text=message_)
             user.is_new = False
             user.save()
 

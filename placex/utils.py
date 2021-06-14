@@ -29,7 +29,7 @@ def set_keys_on_user(user, search_values):
     user.save()
 
 
-def get_rooms_for_user():
+def get_rooms():
     rooms = []
     for key, parser_func in PARSERS.items():
         rooms.extend(parser_func())

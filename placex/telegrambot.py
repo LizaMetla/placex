@@ -3,13 +3,19 @@ import re
 
 from django.core.validators import validate_email
 from django_telegrambot.apps import DjangoTelegramBot
-from telegram.ext import CommandHandler, MessageHandler, Filters
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
+from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 
 from placex.settings import SEARCH_KEYS
 from placex.utils import get_keys_from_message, set_keys_on_user
 from rent.models import User
 from placex.settings_common import PARSERS, ADMIN_EMAILS
 
+HELP_BUTTON_CALLBACK_DATA = 'help'
+help_button = InlineKeyboardButton(
+    text='Help me',  # text that show to user
+    callback_data=HELP_BUTTON_CALLBACK_DATA  # text that send to bot when user tap button
+)
 
 logger = logging.getLogger(__name__)
 
@@ -27,19 +33,21 @@ def start(bot, context):
         user.is_send = True
         user.save()
     if not user.email:
-        context.bot.send_message(chat_id, 'Пожалуйста, введите свой email. \nОн нужен для вашей идентификации в системе и не будет использоваться для спама.')
+        context.bot.send_message(chat_id,
+                                 'Пожалуйста, введите свой email. \nОн нужен для вашей идентификации в системе и не будет использоваться для спама.')
     else:
         context.bot.send_message(chat_id, 'Добро пожаловать! Для подробной инструкции по ' \
-                                                             'по управлению нажмите /help')
+                                          'по управлению нажмите /help',
+                                 reply_markup=InlineKeyboardMarkup([[help_button]]))
+        context.bot.send_message(chat_id, 'Вы можете задать параметры поиска квартир ниже:',
+                                 reply_markup=main_menu_keyboard())
 
 
 def _help(bot, context):
-    chat_id = bot.message.chat.id
+    chat_id = bot.callback_query.message.chat.id
     message = 'Этот бот позволяет искать объявления об аренде квартир/комнат и слать уведомления о новых ' \
               'объявлениях. \n' \
-              'Введите следуюшие свойства квартиры: \n' \
-              'max=< Максимальная цена в USD, по умолчанию 500$ > \n ' \
-              'min=< Минимальная цена в USD, по умолчанию 0$ > \n'
+              'Для установки диапазона цен войдите в меню и нажмите "Указать цену!"'
     context.bot.send_message(chat_id, text=message)
 
 
@@ -59,7 +67,7 @@ def echo(bot, context):
         code = search_res.group(0)
         code = code.replace('<placex>', '').replace('</placex>', '')
         user_in_site = User.objects.filter(attachment_code=code).first()
-        if user_in_site and user_in_site!=user:
+        if user_in_site and user_in_site != user:
             user_in_site.chat_id = user.chat_id
             user_in_site.price_max = user.price_max
             user_in_site.price_min = user.price_min
@@ -73,7 +81,7 @@ def echo(bot, context):
     if not user.is_send:
         is_permissions = False
         context.bot.send_message(chat_id, text='Пожалуйста, введите /start. \n' \
-                                                             'Это необходимо для запуска бота')
+                                               'Это необходимо для запуска бота')
     elif not user.email:
         try:
             validate_email(bot.message.text)
@@ -84,29 +92,36 @@ def echo(bot, context):
             user.is_kufar = True
             user.save()
             context.bot.send_message(chat_id, text='Спасибо 😘 \n' \
-                                                                 'Теперь вы можете вводить параметры для поиска. \n' \
-                                                                 'Для более подробной информации нажмите /help')
+                                                   'Теперь вы можете вводить параметры для поиска. \n' \
+                                                   'Для более подробной информации нажмите кнопку ниже \n' \
+                                                    'Для завершения работы нажмите /stop', reply_markup=InlineKeyboardMarkup([[help_button]]))
+            context.bot.send_message(chat_id, 'Вы можете задать параметры поиска квартир ниже:',
+                                     reply_markup=main_menu_keyboard())
         except:
             is_permissions = False
             context.bot.send_message(chat_id, text='Пожалуйста, введите верный email. \n' \
-                                                                 'Он нужен для вашей идентификации в системе и не будет использоваться для спама.')
+                                                   'Он нужен для вашей идентификации в системе и не будет использоваться для спама.')
 
     elif not any(getattr(user, permission, False) for permission in PARSERS) and is_permissions:
         is_permissions = False
         context.bot.send_message(chat_id, text='Извините, похоже у вас недостаточно прав для ' \
-                                                             'использования данного сервиса. \n' \
-                                                             'Для расширения прав доступа напишите мне на почту: \n' \
-                                                             'domen699@gmail.com \n' \
-                                                             'Спасибо 😉')
+                                               'использования данного сервиса. \n' \
+                                               'Для расширения прав доступа напишите мне на почту: \n' \
+                                               'domen699@gmail.com \n' \
+                                               'Спасибо 😉')
 
     elif is_permissions == True:
         if search_res:
-            context.bot.send_message(chat_id, text=f'{user.name}, спасибо, что связали бота с профилем placex.\nТеперь Вы можете выполнить настройку бота через /help или из профиля placex')
+            context.bot.send_message(chat_id,
+                                     text=f'{user.name}, спасибо, что связали бота с профилем placex.\nТеперь Вы можете выполнить настройку бота через /help или из профиля placex')
         else:
-            search_values = get_keys_from_message(bot.message.text.lower(), SEARCH_KEYS)
-            user = User.objects.get(chat_id=chat_id)
-            set_keys_on_user(user, search_values)
-            context.bot.send_message(chat_id, text=bot.message.text)
+            if bot.message.text == 'Указать цену!':
+                context.bot.send_message(chat_id, text='Установка цены для арендной квартиры:',
+                                         reply_markup=cost_menu_keyboard())
+            elif bot.message.text =='Остановить поиск :(':
+                stop(bot, context)
+            else:
+                context.bot.send_message(chat_id, text=bot.message.text)
 
 
 def error(bot, update, error):
@@ -123,6 +138,65 @@ def stop(bot, context):
     context.bot.send_message(chat_id, text=message)
 
 
+def set_max_price(bot, context, price):
+    chat_id = bot.callback_query.message.chat.id
+    user = User.objects.get(chat_id=chat_id)
+    user.price_max = price
+    user.save()
+    context.bot.send_message(chat_id, text=f'Установлена максимальная цена в {price}$')
+
+
+def set_min_price(bot, context, price):
+    chat_id = bot.callback_query.message.chat.id
+    user = User.objects.get(chat_id=chat_id)
+    user.price_min = price
+    user.save()
+    context.bot.send_message(chat_id, text=f'Установлена минимальная цена в {price}$')
+
+
+def callback_query_handler(bot, update):
+    cqd = bot.callback_query.data
+    # message_id = update.callback_query.message.message_id
+    # update_id = update.update_id
+    if cqd == HELP_BUTTON_CALLBACK_DATA:
+        _help(bot, update)
+    elif cqd == 'm1':
+        set_max_price(bot, update, 300)
+    elif cqd == 'm2':
+        set_max_price(bot, update, 400)
+    elif cqd == 'm3':
+        set_max_price(bot, update, 510)
+    elif cqd == 'm4':
+        set_max_price(bot, update, 1000)
+    elif cqd == 'm5':
+        set_min_price(bot, update, 0)
+    elif cqd == 'm6':
+        set_min_price(bot, update, 100)
+    elif cqd == 'm7':
+        set_min_price(bot, update, 300)
+    elif cqd == 'm8':
+        set_min_price(bot, update, 450)
+
+
+def main_menu_message():
+    return 'Пожалуйста, укажите цену в USD!'
+
+
+def cost_menu_keyboard():
+    keyboard = [
+        [InlineKeyboardButton('От 0$', callback_data='m5'), InlineKeyboardButton('До 300$', callback_data='m1')],
+        [InlineKeyboardButton('От 100$', callback_data='m6'), InlineKeyboardButton('До 400$', callback_data='m2')],
+        [InlineKeyboardButton('От 300$', callback_data='m7'), InlineKeyboardButton('До 510$', callback_data='m3')],
+        [InlineKeyboardButton('От 450$', callback_data='m8'), InlineKeyboardButton('До 1000$', callback_data='m4')],
+        ]
+    return InlineKeyboardMarkup(keyboard)
+
+
+def main_menu_keyboard():
+    return ReplyKeyboardMarkup([[KeyboardButton('Указать цену!', callback_data='cost_menu'), KeyboardButton('Остановить поиск :(')]], resize_keyboard=True,
+                               one_time_keyboard=False)
+
+
 def main():
     logger.info("Loading handlers for telegram bot")
 
@@ -134,11 +208,10 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", _help))
     dp.add_handler(CommandHandler("stop", stop))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
-
+    dp.add_handler(CallbackQueryHandler(callback_query_handler))
     # log all errors
     dp.add_error_handler(error)

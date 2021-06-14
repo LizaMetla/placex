@@ -207,7 +207,12 @@ class AddAdvertView(AbsAuthView, TemplateView):
             return redirect('advert-detail', advert.pk)
         return render(request, self.template_name, context)
 
-
+class DocumentsView(AbsAuthView,TemplateView):
+    template_name = 'rent/documents.html'
+    def get_context_data(self, **kwargs):
+        context = super(DocumentsView, self).get_context_data(**kwargs)
+        context['view_name'] = 'documents'
+        return context
 class RegistrationView(TemplateView):
     template_name = 'rent/registration.html'
 

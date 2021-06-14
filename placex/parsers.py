@@ -28,6 +28,7 @@ def get_all_onliner_rooms() -> list:
                 continue
             address = room.get('location', dict()).get('address')
             room_page = s.get(room.get('url')).text
+            #туть убираем
             time.sleep(2)
             images_urls = []
             description = ''

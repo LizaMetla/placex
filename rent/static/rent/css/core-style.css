@@ -117,11 +117,13 @@ body {
 ul.styled-list {
   margin-top: 0.5rem;
   padding-left: 0.75rem;
+
 }
 ul.styled-list li {
   color: #FBD826;
   padding-left: 0.25rem;
   margin-bottom: 0.25rem;
+
 }
 ul.styled-list li p {
   display: inline;
