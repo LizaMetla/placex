@@ -7,3 +7,4 @@ rent/static/rent/.sass-cache
 /static
 /media
 celerybeat-schedule
+.secret.env

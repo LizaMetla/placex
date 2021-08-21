@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7i38!uy@y0p%jh9yry4qok1%ajou%62^$1n^qr57e-h1cb^nhm'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -134,7 +134,7 @@ DJANGO_TELEGRAMBOT = {
 
     'BOTS': [
         {
-            'TOKEN': '1392182885:AAGFN9235KjdRUD8tGrwPEcnzBdxH5uQR7s',  # Your bot token.
+            'TOKEN': os.environ.get('BOT_TOKEN'),  # Your bot token.
 
             # 'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
             # updates you want your bot to receive. For example, specify

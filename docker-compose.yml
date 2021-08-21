@@ -30,9 +30,8 @@ services:
     ports:
       - "8010:8010"
     tty: true
-    environment:
-      DJANGO_SETTINGS_MODULE: "placex.settings"
-      IS_PRODUCTION: "false"
+    env_file:
+      .secret.env
     networks:
       placex:
         ipv4_address: "172.43.0.3"
@@ -45,6 +44,8 @@ services:
       - .:/code
     depends_on:
       - web
+    env_file:
+      .secret.env
     networks:
       placex:
         ipv4_address: "172.43.0.4"
@@ -67,6 +68,8 @@ services:
     command: bash -c "rm -rf /opt/celeryd.pid && celery worker --pidfile=/opt/celeryd.pid -A placex -B -l INFO"
     volumes:
       - .:/code
+    env_file:
+      .secret.env
     depends_on:
       - redis
     networks:
