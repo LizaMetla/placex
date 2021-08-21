@@ -26,9 +26,15 @@ cd placex
 git checkout develop
 
 ```
-
+## Create .secret.env file in root
+```bash
+SECRET_KEY=<YOU TOKEN>
+BOT_TOKEN=<BOT TOKEN FROM BOTFATHER>
+DJANGO_SETTINGS_MODULE=placex.settings
+IS_PRODUCTION=false
+```
 ## Build and run
 ```bash
-docker-compose -f docker-compose.stage.yml build
-docker-compose -f docker-compose.stage.yml up -d
+docker-compose build
+docker-compose up -d
 ```
